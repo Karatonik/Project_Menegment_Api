@@ -64,7 +64,7 @@ public class Project {
 
     public Project(String name, String description, LocalDateTime dataAndTimeOfCreation,
                    LocalDateTime dataAndTimeOfUpdate, LocalDate dateOfDelivery, List<Task> tasks,
-                   Set<Student> students) {
+                   Set<Student> students, Person projectOwner) {
         this.name = name;
         this.description = description;
         this.dataAndTimeOfCreation = dataAndTimeOfCreation;
@@ -72,25 +72,31 @@ public class Project {
         this.dateOfDelivery = dateOfDelivery;
         this.tasks = tasks;
         this.students = students;
+        this.projectOwner = projectOwner;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Project project)) return false;
-        return Objects.equals(getProjectId(), project.getProjectId()) && Objects.equals(getName(),
-                project.getName()) && Objects.equals(getDescription(), project.getDescription()) &&
+        return Objects.equals(getProjectId(), project.getProjectId()) &&
+                Objects.equals(getName(), project.getName()) &&
+                Objects.equals(getDescription(), project.getDescription()) &&
                 Objects.equals(getDataAndTimeOfCreation(), project.getDataAndTimeOfCreation()) &&
+                getAccess() == project.getAccess() && getStatus() == project.getStatus() &&
                 Objects.equals(getDataAndTimeOfUpdate(), project.getDataAndTimeOfUpdate()) &&
                 Objects.equals(getDateOfDelivery(), project.getDateOfDelivery()) &&
+                Objects.equals(getProjectOwner(), project.getProjectOwner()) &&
                 Objects.equals(getTasks(), project.getTasks()) &&
                 Objects.equals(getStudents(), project.getStudents());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getProjectId(), getName(), getDescription(), getDataAndTimeOfCreation(),
-                getDataAndTimeOfUpdate(), getDateOfDelivery(), getTasks(), getStudents());
+        return Objects.hash(getProjectId(), getName(), getDescription(),
+                getDataAndTimeOfCreation(), getAccess(), getStatus(),
+                getDataAndTimeOfUpdate(), getDateOfDelivery(), getProjectOwner(),
+                getTasks(), getStudents());
     }
 }
 

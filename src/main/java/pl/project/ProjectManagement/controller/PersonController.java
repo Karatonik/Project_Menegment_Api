@@ -13,18 +13,18 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "*", maxAge = 7200)
 public class PersonController {
 
-    private PersonService service;
+    private final PersonService service;
 
     @Autowired
     public PersonController(PersonService personService) {
         this.service = personService;
     }
 
-    @GetMapping
+    @PostMapping("/log")
     public ResponseEntity<?> authenticate(@Valid @RequestBody EmailAndPassword emailAndPassword) {
         return ResponseEntity.ok(service.authenticate(emailAndPassword));
     }
-    @PostMapping
+    @PostMapping("/reg")
     public ResponseEntity<?> setPerson(@Valid @RequestBody EmailAndPassword emailAndPassword) {
         return ResponseEntity.ok(service.setPerson(emailAndPassword));
     }
