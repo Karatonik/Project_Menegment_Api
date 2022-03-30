@@ -25,9 +25,9 @@ import pl.project.ProjectManagement.jwt.AuthTokenFilter;
         prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsService service;
+    private final UserDetailsService service;
 
-    private AuthEntryPointJWT unauthorizedHandler;
+    private final AuthEntryPointJWT unauthorizedHandler;
 
     @Autowired
     public WebSecurityConfig(UserDetailsService userDetailsService, AuthEntryPointJWT unauthorizedHandler) {
@@ -55,8 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(
                 "/configuration/security",
-                "/webjars/**",
-                "/");
+                "/webjars/**");
     }
 
     @Override
@@ -65,8 +64,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/person/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/person/**").permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/1").permitAll()
+                .antMatchers("/person/**").permitAll()
                 .antMatchers(HttpMethod.DELETE).permitAll()
                 .antMatchers(HttpMethod.PUT).permitAll()
                 .anyRequest().authenticated();

@@ -28,4 +28,8 @@ public class InfoController {
                 .contentLength(inputStream.contentLength())
                 .body(inputStream);
     }
+    @GetMapping("/1")
+    public String getOne(){
+        return "One";
+    }
 }
