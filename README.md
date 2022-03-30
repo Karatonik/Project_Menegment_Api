@@ -10,7 +10,7 @@ API
 #### Login
 
 ```http
-  GET /person 
+  POST /person/log 
 ```
 
 | Parameter | Type     | Description                |
@@ -21,7 +21,7 @@ API
 #### Register
 
 ```http
-  POST /person 
+  POST /person/reg 
 ```
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
