@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>31.0.1-jre</version>
+			<version>31.1-jre</version>
 		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -58,13 +58,23 @@
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
-			<version>RELEASE</version>
+			<version>23.0.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-web-api</artifactId>
 			<version>8.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>5.3.16</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>jakarta.mail</artifactId>
+			<version>1.6.7</version>
 		</dependency>
 	</dependencies>
 
