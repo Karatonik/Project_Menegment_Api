@@ -6,7 +6,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import pl.project.ProjectManagement.model.Person;
-import pl.project.ProjectManagement.model.enums.MailRole;
 import pl.project.ProjectManagement.model.request.MailContent;
 import pl.project.ProjectManagement.repository.PersonRepository;
 import pl.project.ProjectManagement.service.interfaces.MailService;
@@ -30,7 +29,7 @@ public class MailServiceImp implements MailService {
     }
 
     @Override
-    public Boolean sendMail(MailContent mailContent) {
+    public Boolean sendMail(MailContent mailContent) {//todo
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -39,28 +38,22 @@ public class MailServiceImp implements MailService {
 
             switch (mailContent.getMailRole()){
 
-                case None -> {
-
-                    mimeMessageHelper.setText(mailContent.getText(), mailContent.isHtmlContent());
-                }
-                case UpdateRole -> {
-                    mimeMessageHelper.setText(url+"/updaterole"+getPersonToken(mailContent.getTo())
-                            , mailContent.isHtmlContent());
-                }
-                case UpdateEmail -> {
-                    mimeMessageHelper.setText(url+"/updateemail"+getPersonToken(mailContent.getTo())
-                            , mailContent.isHtmlContent());
-                }
-                case DeletePerson -> {
-                    mimeMessageHelper.setText(url+"/deleteperson"+getPersonToken(mailContent.getTo())
-                            , mailContent.isHtmlContent());
-                }
-                case UpdatePassword -> {
-                    mimeMessageHelper.setText(url+"/updatepassword"+getPersonToken(mailContent.getTo())
-                            , mailContent.isHtmlContent());
-                }
+                case None -> mimeMessageHelper
+                        .setText(mailContent.getText(),
+                        mailContent.isHtmlContent());
+                case UpdateRole -> mimeMessageHelper
+                        .setText(url+"/updaterole"+getPersonToken(mailContent.getTo())
+                        , mailContent.isHtmlContent());
+                case UpdateEmail -> mimeMessageHelper
+                        .setText(url+"/updateemail"+getPersonToken(mailContent.getTo())
+                        , mailContent.isHtmlContent());
+                case DeletePerson -> mimeMessageHelper
+                        .setText(url+"/deleteperson"+getPersonToken(mailContent.getTo())
+                        , mailContent.isHtmlContent());
+                case UpdatePassword -> mimeMessageHelper
+                        .setText(url+"/updatepassword"+getPersonToken(mailContent.getTo())
+                        , mailContent.isHtmlContent());
             }
-
             javaMailSender.send(mimeMessage);
             return true;
         } catch (MessagingException messagingException) {

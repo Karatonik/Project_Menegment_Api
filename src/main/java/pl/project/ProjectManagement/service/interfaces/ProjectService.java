@@ -10,8 +10,6 @@ public interface ProjectService {
 
     Project setProject(Project project);
 
-    Project setProject(String name, String description);
-
     boolean updateProjectDescription(String email, Long projectId, String description);
 
     boolean updateProjectName(String email, Long projectId, String name);

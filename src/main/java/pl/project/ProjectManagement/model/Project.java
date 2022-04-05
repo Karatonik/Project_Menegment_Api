@@ -60,11 +60,11 @@ public class Project {
     @ManyToMany
     @JoinTable(joinColumns = {@JoinColumn(name = "project_id")},
             inverseJoinColumns = {@JoinColumn(name = "student_id")})
-    private Set<Student> students;
+    private List<Student> students;
 
     public Project(String name, String description, LocalDateTime dataAndTimeOfCreation,
                    LocalDateTime dataAndTimeOfUpdate, LocalDate dateOfDelivery, List<Task> tasks,
-                   Set<Student> students, Person projectOwner) {
+                   List<Student> students, Person projectOwner) {
         this.name = name;
         this.description = description;
         this.dataAndTimeOfCreation = dataAndTimeOfCreation;
