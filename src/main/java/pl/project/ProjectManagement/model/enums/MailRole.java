@@ -2,7 +2,6 @@ package pl.project.ProjectManagement.model.enums;
 
 import lombok.ToString;
 
-@ToString
 public enum MailRole {
     UpdateEmail("email"),
     UpdateRole("role"),
@@ -14,5 +13,10 @@ public enum MailRole {
 
     MailRole(String url) {
         this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return url;
     }
 }

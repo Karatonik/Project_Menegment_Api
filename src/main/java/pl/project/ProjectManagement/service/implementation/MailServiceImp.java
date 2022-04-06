@@ -29,7 +29,8 @@ public class MailServiceImp implements MailService {
     private String url;
 
     @Autowired
-    public MailServiceImp(PersonRepository personRepository, Environment environment) {
+    public MailServiceImp(JavaMailSender javaMailSender, PersonRepository personRepository, Environment environment) {
+        this.javaMailSender = javaMailSender;
         this.personRepository = personRepository;
         this.environment = environment;
     }
@@ -68,7 +69,7 @@ public class MailServiceImp implements MailService {
     }
 
     private String setSubject(MailRole mailRole) {
-        return Objects.requireNonNull(environment.getProperty("subject." + mailRole));
+        return Objects.requireNonNull(environment.getProperty(String.format("subject.%s",mailRole)));
     }
 
     private String setText(MailRole mailRole, String token) {
