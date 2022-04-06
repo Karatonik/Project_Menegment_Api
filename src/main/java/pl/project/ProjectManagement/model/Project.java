@@ -4,7 +4,7 @@ package pl.project.ProjectManagement.model;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import pl.project.ProjectManagement.model.enums.AccessTyp;
+import pl.project.ProjectManagement.model.enums.AccessType;
 import pl.project.ProjectManagement.model.enums.StatusType;
 
 import javax.persistence.*;
@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity(name = "project")
 
@@ -38,7 +37,7 @@ public class Project {
     private LocalDateTime dataAndTimeOfCreation;
 
     @Column(columnDefinition = "integer default 0") //access = Close
-    private AccessTyp access;
+    private AccessType access;
 
     @Column(columnDefinition = "integer default 0") //status = Continues
     private StatusType status;

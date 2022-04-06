@@ -11,7 +11,7 @@ import pl.project.ProjectManagement.service.interfaces.ProjectService;
 @CrossOrigin(origins = "*", maxAge = 7200)
 public class ProjectController {
 
-    private ProjectService service;
+    private final ProjectService service;
 
     @Autowired
     public ProjectController(ProjectService projectService) {

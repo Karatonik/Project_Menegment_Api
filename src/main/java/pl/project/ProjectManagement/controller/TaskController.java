@@ -11,7 +11,7 @@ import pl.project.ProjectManagement.service.interfaces.TaskService;
 @CrossOrigin(origins = "*", maxAge = 7200)
 public class TaskController {
 
-    private TaskService service;
+    private final TaskService service;
 
     @Autowired
     public TaskController(TaskService taskService) {

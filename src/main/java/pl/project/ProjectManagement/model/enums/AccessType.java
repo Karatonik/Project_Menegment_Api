@@ -1,5 +1,5 @@
 package pl.project.ProjectManagement.model.enums;
 
-public enum AccessTyp {
+public enum AccessType {
     Close, Open
 }

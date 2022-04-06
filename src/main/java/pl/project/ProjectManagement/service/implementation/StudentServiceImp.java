@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.Project;
 import pl.project.ProjectManagement.model.Student;
-import pl.project.ProjectManagement.model.enums.AccessTyp;
+import pl.project.ProjectManagement.model.enums.AccessType;
 import pl.project.ProjectManagement.model.enums.Role;
 import pl.project.ProjectManagement.model.enums.StudyType;
 import pl.project.ProjectManagement.repository.PersonRepository;
@@ -71,7 +71,7 @@ public class StudentServiceImp implements StudentService {//todo
         Optional<Project> optionalProject = projectRepository.findById(projectId);
         if(optionalProject.isPresent()){
             Project project = optionalProject.get();
-            if(project.getAccess().equals(AccessTyp.Open)){
+            if(project.getAccess().equals(AccessType.Open)){
                 Optional<Student> optionalStudent = studentRepository.findById(email);
                 if(optionalStudent.isPresent()){
                     List<Student> studentList = project.getStudents();

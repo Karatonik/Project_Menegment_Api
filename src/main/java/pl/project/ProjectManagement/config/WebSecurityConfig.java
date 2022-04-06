@@ -55,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(
                 "/configuration/security",
-                "/webjars/**");
+                "/webjars/**","/person/**");
     }
 
     @Override

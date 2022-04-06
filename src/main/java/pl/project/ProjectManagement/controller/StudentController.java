@@ -11,7 +11,7 @@ import pl.project.ProjectManagement.service.interfaces.StudentService;
 @CrossOrigin(origins = "*", maxAge = 7200)
 public class StudentController {
 
-    private StudentService service;
+    private final StudentService service;
 
     @Autowired
     public StudentController(StudentService studentService) {

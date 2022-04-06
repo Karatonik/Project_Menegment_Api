@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.Project;
 import pl.project.ProjectManagement.model.Student;
-import pl.project.ProjectManagement.model.enums.AccessTyp;
+import pl.project.ProjectManagement.model.enums.AccessType;
 import pl.project.ProjectManagement.model.enums.Role;
 import pl.project.ProjectManagement.model.enums.StatusType;
 import pl.project.ProjectManagement.repository.PersonRepository;
@@ -115,7 +115,7 @@ public class ProjectServiceImp implements ProjectService {//todo
     }
 
     @Override
-    public boolean updateProjectAccess(String email, Long projectId, AccessTyp access) {
+    public boolean updateProjectAccess(String email, Long projectId, AccessType access) {
      Optional<Person> optionalPerson = personRepository.findById(email);
      if(optionalPerson.isPresent()){
          Optional<Project> optionalProject = projectRepository

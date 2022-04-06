@@ -13,12 +13,13 @@ import java.nio.file.Path;
 
 @Service
 public class InfoServiceImp implements InfoService {
-    @Value("${my.photoBanner}")
-    private String photoBanner;
+    @Value("${my.hello}")
+    private String hello;
+
+
 
     @Override
-    public Resource getBanner() throws IOException {
-        return new ByteArrayResource(Files.readAllBytes(Path
-                .of(ResourceUtils.getFile(photoBanner).getPath())));
+    public String getInfo() {
+        return hello;
     }
 }
