@@ -1,10 +1,7 @@
 package pl.project.ProjectManagement.builder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.project.ProjectManagement.model.Person;
@@ -17,7 +14,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class PersonBuilder implements UserDetails {
+
     private static final long serialVersionUID = 1L;
 
     private String email;
@@ -74,11 +73,13 @@ public class PersonBuilder implements UserDetails {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        PersonBuilder personBuilder = (PersonBuilder) o;
-        return Objects.equals(email, personBuilder.email);
+        if (this == o) return true;
+        if (!(o instanceof PersonBuilder that)) return false;
+        return Objects.equals(getEmail(), that.getEmail()) && Objects.equals(getPassword(), that.getPassword());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getEmail(), getPassword());
     }
 }

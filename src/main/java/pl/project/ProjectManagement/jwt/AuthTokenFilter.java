@@ -47,7 +47,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            logger.error("Cannot set user authentication: {}","a", e);//todo
+            logger.error("Cannot set user authentication: {}","a", e);
         }
 
         filterChain.doFilter(request, response);

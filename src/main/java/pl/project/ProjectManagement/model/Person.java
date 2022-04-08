@@ -34,8 +34,7 @@ public class Person {
     @Column(nullable = false, columnDefinition = "integer default 0") // role = User
     private Role role;
 
-    @OneToOne
-    private Student student;
+
 
     @OneToMany(mappedBy = "projectOwner")
     @ToString.Exclude
@@ -67,6 +66,6 @@ public class Person {
         if (!(o instanceof Person person)) return false;
         return Objects.equals(getEmail(), person.getEmail()) && Objects.equals(getPassword(),
                 person.getPassword()) && Objects.equals(getToken(), person.getToken()) &&
-                getRole() == person.getRole() && Objects.equals(getStudent(), person.getStudent());
+                getRole() == person.getRole();
     }
 }

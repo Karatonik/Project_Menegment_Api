@@ -10,10 +10,14 @@ import org.springframework.stereotype.Service;
 import pl.project.ProjectManagement.builder.PersonBuilder;
 import pl.project.ProjectManagement.jwt.JwtUtils;
 import pl.project.ProjectManagement.model.Person;
+import pl.project.ProjectManagement.model.Project;
+import pl.project.ProjectManagement.model.Student;
 import pl.project.ProjectManagement.model.enums.Role;
 import pl.project.ProjectManagement.model.request.EmailAndPassword;
 import pl.project.ProjectManagement.model.response.JwtResponse;
 import pl.project.ProjectManagement.repository.PersonRepository;
+import pl.project.ProjectManagement.repository.ProjectRepository;
+import pl.project.ProjectManagement.repository.StudentRepository;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 
 import java.util.ArrayList;
@@ -24,15 +28,21 @@ import java.util.Optional;
 public class PersonServiceImp implements PersonService {
 
     private final PersonRepository personRepository;
+    private final StudentRepository studentRepository;
+    private final ProjectRepository projectRepository;
 
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
 
     @Autowired
-    public PersonServiceImp(PersonRepository personRepository, AuthenticationManager authenticationManager,
+    public PersonServiceImp(PersonRepository personRepository,
+                            StudentRepository studentRepository,ProjectRepository projectRepository ,
+                            AuthenticationManager authenticationManager,
                             PasswordEncoder encoder, JwtUtils jwtUtils) {
         this.personRepository = personRepository;
+        this.studentRepository = studentRepository;
+        this.projectRepository = projectRepository;
         this.authenticationManager = authenticationManager;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
@@ -70,12 +80,13 @@ public class PersonServiceImp implements PersonService {
     }
 
     @Override
-    public boolean updatePersonPassword(String token, String newPassword) {
+    public boolean updatePersonPassword(String token, String newPassword) {//todo
         Optional<Person> optionalPerson = this.personRepository.findByToken(token);
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();
             person.setPassword(this.encoder.encode(newPassword));
-            person.setToken();
+            personRepository.save(person);
+
             return true;
         }
         return false;

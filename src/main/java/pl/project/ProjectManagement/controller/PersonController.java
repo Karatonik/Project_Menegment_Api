@@ -38,13 +38,13 @@ public class PersonController {
         return ResponseEntity.ok(service.getAdminToken(emailAndPassword));
     }
 
-    @PutMapping("/pass")
-    public ResponseEntity<Boolean> updatePersonPassword(@RequestBody String token, @RequestBody String newPassword) {
+    @PutMapping("/pass/{token}")
+    public ResponseEntity<Boolean> updatePersonPassword(@PathVariable String token, @RequestBody String newPassword) {
         return ResponseEntity.ok(service.updatePersonPassword(token, newPassword));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Boolean> deletePerson(@RequestBody String token, @RequestBody String password) {
+    @DeleteMapping("/{token}")
+    public ResponseEntity<Boolean> deletePerson(@PathVariable String token, @RequestBody String password) {
         return ResponseEntity.ok(service.deletePerson(token, password));
     }
 

@@ -13,7 +13,7 @@ import pl.project.ProjectManagement.repository.PersonRepository;
 @Service
 public class UserDetailsServiceImp implements UserDetailsService {
 
-    private PersonRepository personRepository;
+    private final PersonRepository personRepository;
 
     @Autowired
     public UserDetailsServiceImp(PersonRepository personRepository) {
