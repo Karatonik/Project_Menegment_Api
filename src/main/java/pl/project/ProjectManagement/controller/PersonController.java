@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.Person;
-import pl.project.ProjectManagement.model.enums.Role;
 import pl.project.ProjectManagement.model.request.EmailAndPassword;
+import pl.project.ProjectManagement.model.request.UpdateRoleRequest;
+import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 
 import javax.validation.Valid;
@@ -25,42 +26,43 @@ public class PersonController {
 
     @PostMapping("/log")
     public ResponseEntity<?> authenticate(@Valid @RequestBody EmailAndPassword emailAndPassword) {
-        return ResponseEntity.ok(service.authenticate(emailAndPassword));
+        return SmartResponseEntity.fromJWTResponse(service.authenticate(emailAndPassword));
     }
 
     @PostMapping("/reg")
     public ResponseEntity<?> setPerson(@Valid @RequestBody EmailAndPassword emailAndPassword) {
-        return ResponseEntity.ok(service.setPerson(emailAndPassword));
+        return SmartResponseEntity.fromBoolean(service.setPerson(emailAndPassword));
     }
 
     @PostMapping("/admin")
-    public ResponseEntity<String> getAdminToken(@Valid @RequestBody EmailAndPassword emailAndPassword) {
-        return ResponseEntity.ok(service.getAdminToken(emailAndPassword));
+    public ResponseEntity<?> getAdminToken(@Valid @RequestBody EmailAndPassword emailAndPassword) {
+        return SmartResponseEntity.fromString(service.getAdminToken(emailAndPassword));
     }
 
     @PutMapping("/pass/{token}")
-    public ResponseEntity<Boolean> updatePersonPassword(@PathVariable String token, @RequestBody String newPassword) {
-        return ResponseEntity.ok(service.updatePersonPassword(token, newPassword));
+    public ResponseEntity<?> updatePersonPassword(@PathVariable String token, @RequestBody String newPassword) {
+        return SmartResponseEntity.fromBoolean(service.updatePersonPassword(token, newPassword));
     }
 
     @DeleteMapping("/{token}")
-    public ResponseEntity<Boolean> deletePerson(@PathVariable String token, @RequestBody String password) {
-        return ResponseEntity.ok(service.deletePerson(token, password));
+    public ResponseEntity<?> deletePerson(@PathVariable String token, @RequestBody String password) {
+        return SmartResponseEntity.fromBoolean(service.deletePerson(token, password));
     }
 
-    @PutMapping("/mail")
-    public ResponseEntity<Boolean> updateEmail(@RequestBody String token, @RequestBody String newEmail) {
-        return ResponseEntity.ok(service.updateEmail(token, newEmail));
+    @PutMapping("/email/{token}")
+    public ResponseEntity<?> updateEmail(@PathVariable String token, @RequestBody String newEmail) {
+        return SmartResponseEntity.fromBoolean(service.updateEmail(token, newEmail));
     }
 
     @PutMapping("/role")
-    ResponseEntity<Boolean> updateRole(@RequestBody String adminEmail
-            , @RequestBody String adminToken, @RequestBody String email, @RequestBody Role role) {
-        return ResponseEntity.ok(service.updateRole(adminEmail, adminToken, email, role));
+    ResponseEntity<?> updateRole(@RequestBody UpdateRoleRequest request) {
+        return SmartResponseEntity.fromBoolean(service.updateRole(request.getAdminEmail(), request.getAdminToken(),
+                request.getEmail(), request.getRole()));
     }
+
     @GetMapping("/all")
-    ResponseEntity<List<Person>> getAllPerson(@RequestBody String adminEmail,@RequestBody String adminToken){
-        return ResponseEntity.ok(service.getAllPerson(adminEmail,adminToken));
+    ResponseEntity<List<Person>> getAllPerson(@RequestBody String adminEmail, @RequestBody String adminToken) {
+        return ResponseEntity.ok(service.getAllPerson(adminEmail, adminToken));
     }
 
 

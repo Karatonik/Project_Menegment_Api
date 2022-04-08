@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.request.MailContent;
+import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.MailService;
 
 
@@ -20,7 +21,7 @@ public class MailController {
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> sendMail(@RequestBody MailContent mailContent) {
-        return ResponseEntity.ok(mailService.sendMail(mailContent));
+    public ResponseEntity<?> sendMail(@RequestBody MailContent mailContent) {
+        return SmartResponseEntity.fromBoolean(mailService.sendMail(mailContent));
     }
 }

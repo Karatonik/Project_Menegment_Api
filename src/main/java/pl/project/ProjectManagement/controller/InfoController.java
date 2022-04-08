@@ -19,11 +19,12 @@ public class InfoController {
     }
 
     @GetMapping
-    public ResponseEntity<String> getInfo(){
-       return ResponseEntity.ok(infoService.getInfo());
+    public ResponseEntity<String> getInfo() {
+        return ResponseEntity.ok(infoService.getInfo());
     }
+
     @GetMapping("/1")
-    public String getOne(){
+    public String getOne() {
         return "One";
     }
 }
