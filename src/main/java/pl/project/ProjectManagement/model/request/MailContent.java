@@ -1,6 +1,7 @@
 package pl.project.ProjectManagement.model.request;
 
 import lombok.*;
+import pl.project.ProjectManagement.model.enums.AuthorType;
 import pl.project.ProjectManagement.model.enums.MailRole;
 
 @NoArgsConstructor
@@ -18,4 +19,13 @@ public class MailContent {
     private boolean isHtmlContent;
 
     private MailRole mailRole;
+
+    private AuthorType authorType;
+
+    public MailContent(String to, MailRole mailRole) {
+        this.to = to;
+        this.mailRole = mailRole;
+        this.isHtmlContent = true;
+
+    }
 }

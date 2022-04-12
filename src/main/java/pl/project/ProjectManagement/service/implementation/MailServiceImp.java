@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import pl.project.ProjectManagement.model.Person;
+import pl.project.ProjectManagement.model.enums.AuthorType;
 import pl.project.ProjectManagement.model.enums.MailRole;
 import pl.project.ProjectManagement.model.request.MailContent;
 import pl.project.ProjectManagement.repository.PersonRepository;
@@ -37,6 +38,11 @@ public class MailServiceImp implements MailService {
 
     @Override
     public Boolean sendMail(MailContent mailContent) {
+        if(mailContent.getAuthorType().equals(AuthorType.service) && //check
+                !mailContent.getSubject().equals("") &&
+                !mailContent.getText().equals(""))
+            return false;
+
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);

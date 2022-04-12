@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
-                "/webjars/**", "/person/**", "/mail/**");//todo mail da admina
+                "/webjars/**", "/person/**");
     }
 
     @Override

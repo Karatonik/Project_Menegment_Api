@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.Person;
+import pl.project.ProjectManagement.model.enums.MailRole;
 import pl.project.ProjectManagement.model.request.EmailAndPassword;
+import pl.project.ProjectManagement.model.request.MailContent;
 import pl.project.ProjectManagement.model.request.UpdateRoleRequest;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
+import pl.project.ProjectManagement.service.interfaces.MailService;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 
 import javax.validation.Valid;
@@ -20,6 +23,7 @@ import java.util.List;
 public class PersonController {
 
     private final PersonService service;
+    private final MailService mail;
 
     @Autowired
     public PersonController(PersonService personService) {
@@ -67,5 +71,8 @@ public class PersonController {
         return ResponseEntity.ok(service.getAllPerson(adminEmail, adminToken));
     }
 
-
+    @PostMapping("/mail/{to}/{mailRole}")
+    ResponseEntity<?> sendToken(@PathVariable String to, @PathVariable MailRole  mailRole){
+        return SmartResponseEntity.fromBoolean(mail.sendMail(new MailContent(to, mailRole)));
+    }
 }
