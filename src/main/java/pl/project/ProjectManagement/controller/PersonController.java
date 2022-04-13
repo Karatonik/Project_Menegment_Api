@@ -22,57 +22,58 @@ import java.util.List;
 @Tag(name="person", description = "auth and person API")
 public class PersonController {
 
-    private final PersonService service;
-    private final MailService mail;
+    private final PersonService personService;
+    private final MailService mailService;
 
     @Autowired
-    public PersonController(PersonService personService) {
-        this.service = personService;
+    public PersonController(PersonService service, MailService mailService) {
+        this.personService = service;
+        this.mailService = mailService;
     }
 
     @PostMapping("/log")
     public ResponseEntity<?> authenticate(@Valid @RequestBody EmailAndPassword emailAndPassword) {
-        return SmartResponseEntity.fromJWTResponse(service.authenticate(emailAndPassword));
+        return SmartResponseEntity.fromJWTResponse(this.personService.authenticate(emailAndPassword));
     }
 
     @PostMapping("/reg")
     public ResponseEntity<?> setPerson(@Valid @RequestBody EmailAndPassword emailAndPassword) {
-        return SmartResponseEntity.fromBoolean(service.setPerson(emailAndPassword));
+        return SmartResponseEntity.fromBoolean(this.personService.setPerson(emailAndPassword));
     }
 
     @PostMapping("/admin")
     public ResponseEntity<?> getAdminToken(@Valid @RequestBody EmailAndPassword emailAndPassword) {
-        return SmartResponseEntity.fromString(service.getAdminToken(emailAndPassword));
+        return SmartResponseEntity.fromString(this.personService.getAdminToken(emailAndPassword));
     }
 
     @PutMapping("/pass/{token}")
     public ResponseEntity<?> updatePersonPassword(@PathVariable String token, @RequestBody String newPassword) {
-        return SmartResponseEntity.fromBoolean(service.updatePersonPassword(token, newPassword));
+        return SmartResponseEntity.fromBoolean(this.personService.updatePersonPassword(token, newPassword));
     }
 
     @DeleteMapping("/{token}")
     public ResponseEntity<?> deletePerson(@PathVariable String token, @RequestBody String password) {
-        return SmartResponseEntity.fromBoolean(service.deletePerson(token, password));
+        return SmartResponseEntity.fromBoolean(this.personService.deletePerson(token, password));
     }
 
     @PutMapping("/email/{token}")
     public ResponseEntity<?> updateEmail(@PathVariable String token, @RequestBody String newEmail) {
-        return SmartResponseEntity.fromBoolean(service.updateEmail(token, newEmail));
+        return SmartResponseEntity.fromBoolean(this.personService.updateEmail(token, newEmail));
     }
 
     @PutMapping("/role")
     ResponseEntity<?> updateRole(@RequestBody UpdateRoleRequest request) {
-        return SmartResponseEntity.fromBoolean(service.updateRole(request.getAdminEmail(), request.getAdminToken(),
+        return SmartResponseEntity.fromBoolean(this.personService.updateRole(request.getAdminEmail(), request.getAdminToken(),
                 request.getEmail(), request.getRole()));
     }
 
     @GetMapping("/all")
     ResponseEntity<List<Person>> getAllPerson(@RequestBody String adminEmail, @RequestBody String adminToken) {
-        return ResponseEntity.ok(service.getAllPerson(adminEmail, adminToken));
+        return ResponseEntity.ok(this.personService.getAllPerson(adminEmail, adminToken));
     }
 
     @PostMapping("/mail/{to}/{mailRole}")
     ResponseEntity<?> sendToken(@PathVariable String to, @PathVariable MailRole  mailRole){
-        return SmartResponseEntity.fromBoolean(mail.sendMail(new MailContent(to, mailRole)));
+        return SmartResponseEntity.fromBoolean(this.mailService.sendMail(new MailContent(to, mailRole)));
     }
 }

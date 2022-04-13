@@ -20,12 +20,16 @@ public class MailContent {
 
     private MailRole mailRole;
 
-    private AuthorType authorType;
+    private  AuthorType authorType;
+
+    private String adminToken;
 
     public MailContent(String to, MailRole mailRole) {
         this.to = to;
         this.mailRole = mailRole;
         this.isHtmlContent = true;
+        this.adminToken="";
+        this.authorType =AuthorType.service;
 
     }
 }

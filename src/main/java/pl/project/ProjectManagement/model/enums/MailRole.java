@@ -6,8 +6,7 @@ public enum MailRole {
     UpdateEmail("email"),
     UpdateRole("role"),
     DeletePerson("delete"),
-    UpdatePassword("password"),
-    None("");
+    UpdatePassword("password");
 
     private final String url;
 

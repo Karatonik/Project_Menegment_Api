@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.enums.AuthorType;
 import pl.project.ProjectManagement.model.enums.MailRole;
+import pl.project.ProjectManagement.model.enums.Role;
 import pl.project.ProjectManagement.model.request.MailContent;
 import pl.project.ProjectManagement.repository.PersonRepository;
 import pl.project.ProjectManagement.service.interfaces.MailService;
@@ -38,19 +39,22 @@ public class MailServiceImp implements MailService {
 
     @Override
     public Boolean sendMail(MailContent mailContent) {
-        if(mailContent.getAuthorType().equals(AuthorType.service) && //check
-                !mailContent.getSubject().equals("") &&
-                !mailContent.getText().equals(""))
-            return false;
-
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setTo(mailContent.getTo());
-            if (mailContent.getMailRole().equals(MailRole.None)) {
+            if (mailContent.getAuthorType().equals(AuthorType.admin)) {
+                Optional<Person> optionalPerson =  this.personRepository.findByToken(mailContent.getAdminToken());
+                if(optionalPerson.isPresent()){
+                    Person admin = optionalPerson.get();
+                    if (!admin.getRole().equals(Role.Admin))
+                    return false;
+                }
+
                 mimeMessageHelper.setSubject(mailContent.getSubject());
                 mimeMessageHelper.setText(mailContent.getText(),
                         mailContent.isHtmlContent());
+
             } else {
                 mimeMessageHelper.setSubject(setSubject(mailContent.getMailRole()));
                 mimeMessageHelper.setText(setText(mailContent.getMailRole(),
