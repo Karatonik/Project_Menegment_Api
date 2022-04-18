@@ -74,6 +74,7 @@ public class PersonController {
 
     @PostMapping("/mail/{to}/{mailRole}")
     ResponseEntity<?> sendToken(@PathVariable String to, @PathVariable MailRole  mailRole){
+        System.out.println(new MailContent(to, mailRole));
         return SmartResponseEntity.fromBoolean(this.mailService.sendMail(new MailContent(to, mailRole)));
     }
 }
