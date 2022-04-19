@@ -2,17 +2,12 @@ package pl.project.ProjectManagement.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.project.ProjectManagement.model.Person;
-import pl.project.ProjectManagement.model.Project;
-import pl.project.ProjectManagement.model.Student;
-import pl.project.ProjectManagement.model.Task;
+import pl.project.ProjectManagement.model.*;
 import pl.project.ProjectManagement.model.dto.ProjectDto;
 import pl.project.ProjectManagement.model.dto.StudentDto;
 import pl.project.ProjectManagement.model.dto.TaskDto;
-import pl.project.ProjectManagement.repository.PersonRepository;
-import pl.project.ProjectManagement.repository.ProjectRepository;
-import pl.project.ProjectManagement.repository.StudentRepository;
-import pl.project.ProjectManagement.repository.TaskRepository;
+import pl.project.ProjectManagement.model.dto.TaskResultDto;
+import pl.project.ProjectManagement.repository.*;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 
 import java.util.HashSet;
@@ -26,16 +21,19 @@ public class ModelWrapperImp implements ModelWrapper {
     private final StudentRepository studentRepository;
     private final PersonRepository personRepository;
     private final TaskRepository taskRepository;
+    private final TaskResultRepository taskResultRepository;
 
     @Autowired
     public ModelWrapperImp(ProjectRepository projectRepository,
                            StudentRepository studentRepository,
                            PersonRepository personRepository,
-                           TaskRepository taskRepository) {
+                           TaskRepository taskRepository,
+                           TaskResultRepository taskResultRepository) {
         this.projectRepository = projectRepository;
         this.studentRepository = studentRepository;
         this.personRepository = personRepository;
         this.taskRepository = taskRepository;
+        this.taskResultRepository = taskResultRepository;
     }
 
     @Override
@@ -87,5 +85,22 @@ public class ModelWrapperImp implements ModelWrapper {
         task.setProject(optionalProject.orElse(new Project()));
 
         return task;
+    }
+
+    @Override
+    public TaskResult getTaskResultFromTaskResultDto(TaskResultDto dto) {
+        TaskResult taskResult;
+        Optional<TaskResult> optionalTaskResult = taskResultRepository.findById(dto.getResultId());
+        Optional<Student> optionalStudent = studentRepository.findById(dto.getStudentEmail());
+        Optional<Task> optionalTask = taskRepository.findById(dto.getTaskId());
+
+        taskResult = optionalTaskResult.orElse(new TaskResult());
+        taskResult.setTask(optionalTask.orElse(new Task()));
+        taskResult.setStudent(optionalStudent.orElse(new Student()));
+
+        taskResult.setDateOfUpload(dto.getDateOfUpload());
+        taskResult.setFileName(dto.getFileName());
+
+        return taskResult;
     }
 }

@@ -4,6 +4,7 @@ import lombok.*;
 import pl.project.ProjectManagement.model.enums.StudyType;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -34,6 +35,11 @@ public class Student {
     @ManyToMany(mappedBy = "students")
     @ToString.Exclude
     private Set<Project> projects;
+
+
+    @OneToMany(mappedBy = "student")
+    @ToString.Exclude
+    private List<TaskResult> taskResults;
     @OneToOne
     private Person person;
 

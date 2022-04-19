@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "task")
@@ -34,6 +35,10 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @OneToMany(mappedBy = "task")
+    @ToString.Exclude
+    private List<TaskResult> taskResults;
 
     public Task(String name, Integer orderNumber, String description, LocalDateTime dateTimeAdded, Project project) {
         this.name = name;

@@ -1,11 +1,10 @@
 package pl.project.ProjectManagement.model.dto;
 
 import lombok.*;
-import pl.project.ProjectManagement.model.Project;
 import pl.project.ProjectManagement.model.Task;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @Getter
 @Setter
