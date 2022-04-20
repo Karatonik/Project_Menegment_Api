@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProjectServiceImp implements ProjectService {//todo
+public class ProjectServiceImp implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final StudentRepository studentRepository;
@@ -83,7 +83,7 @@ public class ProjectServiceImp implements ProjectService {//todo
         Optional<Person> optionalPerson = personRepository.findById(email);
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();
-            if (person.getRole().equals(Role.Admin)) {
+            if (person.getRole().equals(Role.ADMIN)) {
                 return projectRepository.findAll();
             } else {
                 Optional<Student> optionalStudent = studentRepository.findById(email);
@@ -116,31 +116,31 @@ public class ProjectServiceImp implements ProjectService {//todo
 
     @Override
     public boolean updateProjectAccess(String email, Long projectId, AccessType access) {
-     Optional<Person> optionalPerson = personRepository.findById(email);
-     if(optionalPerson.isPresent()){
-         Optional<Project> optionalProject = projectRepository
-                 .findByProjectIdAndProjectOwner(projectId, optionalPerson.get());
-         if(optionalProject.isPresent()){
-             Project project = optionalProject.get();
-             project.setAccess(access);
-             projectRepository.save(project);
-             return  true;
-         }
-     }
+        Optional<Person> optionalPerson = personRepository.findById(email);
+        if (optionalPerson.isPresent()) {
+            Optional<Project> optionalProject = projectRepository
+                    .findByProjectIdAndProjectOwner(projectId, optionalPerson.get());
+            if (optionalProject.isPresent()) {
+                Project project = optionalProject.get();
+                project.setAccess(access);
+                projectRepository.save(project);
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean updateProjectStatus(String email, Long projectId, StatusType status) {
         Optional<Person> optionalPerson = personRepository.findById(email);
-        if(optionalPerson.isPresent()){
+        if (optionalPerson.isPresent()) {
             Optional<Project> optionalProject = projectRepository
                     .findByProjectIdAndProjectOwner(projectId, optionalPerson.get());
-            if(optionalProject.isPresent()){
+            if (optionalProject.isPresent()) {
                 Project project = optionalProject.get();
                 project.setStatus(status);
                 projectRepository.save(project);
-                return  true;
+                return true;
             }
         }
         return false;

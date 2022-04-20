@@ -4,5 +4,5 @@ import lombok.ToString;
 
 @ToString
 public enum Role {
-    User, Admin
+    USER, ADMIN
 }

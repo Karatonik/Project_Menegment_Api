@@ -18,7 +18,6 @@ public class TaskResultServiceImp implements TaskResultService {
     private final TaskResultRepository taskResultRepository;
     private final TaskRepository taskRepository;
 
-
     @Autowired
     public TaskResultServiceImp(TaskResultRepository taskResultRepository,
                                 TaskRepository taskRepository) {
@@ -26,7 +25,6 @@ public class TaskResultServiceImp implements TaskResultService {
         this.taskRepository = taskRepository;
 
     }
-
 
     @Override
     public TaskResult setTaskResult(TaskResult taskResult) {

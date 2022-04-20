@@ -36,7 +36,6 @@ public class Student {
     @ToString.Exclude
     private Set<Project> projects;
 
-
     @OneToMany(mappedBy = "student")
     @ToString.Exclude
     private List<TaskResult> taskResults;
@@ -44,7 +43,7 @@ public class Student {
     private Person person;
 
     public Student(String name, String surname, String index_number,
-                    Set<Project> projects, Person person) {
+                   Set<Project> projects, Person person) {
         this.name = name;
         this.surname = surname;
         this.index_number = index_number;

@@ -51,7 +51,9 @@ public class ProjectDto {
         this.dataAndTimeOfUpdate = project.getDataAndTimeOfUpdate();
         this.dateOfDelivery = project.getDateOfDelivery();
         this.projectOwnerEmail = project.getProjectOwner().getEmail();
-        this.tasksIds = project.getTasks().stream().map(Task::getTaskId).collect(Collectors.toList());
-        this.studentsEmails = project.getStudents().stream().map(Student::getEmail).collect(Collectors.toList());
+        this.tasksIds = project.getTasks().stream()
+                .map(Task::getTaskId).collect(Collectors.toList());
+        this.studentsEmails = project.getStudents().stream()
+                .map(Student::getEmail).collect(Collectors.toList());
     }
 }

@@ -27,7 +27,7 @@ public class TaskResultDto {
         this.studentEmail = taskResult.getStudent().getEmail();
         this.taskId = taskResult.getTask().getTaskId();
         this.fileName = taskResult.getFileName();
-        this.dateOfUpload =taskResult.getDateOfUpload();
+        this.dateOfUpload = taskResult.getDateOfUpload();
 
     }
 }

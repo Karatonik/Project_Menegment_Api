@@ -31,7 +31,8 @@ public class MailServiceImp implements MailService {
     private String url;
 
     @Autowired
-    public MailServiceImp(JavaMailSender javaMailSender, PersonRepository personRepository, Environment environment) {
+    public MailServiceImp(JavaMailSender javaMailSender, PersonRepository personRepository
+            , Environment environment) {
         this.javaMailSender = javaMailSender;
         this.personRepository = personRepository;
         this.environment = environment;
@@ -43,12 +44,12 @@ public class MailServiceImp implements MailService {
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setTo(mailContent.getTo());
-            if (mailContent.getAuthorType().equals(AuthorType.admin)) {
-                Optional<Person> optionalPerson =  this.personRepository.findByToken(mailContent.getAdminToken());
-                if(optionalPerson.isPresent()){
+            if (mailContent.getAuthorType().equals(AuthorType.ADMIN)) {
+                Optional<Person> optionalPerson = this.personRepository.findByToken(mailContent.getAdminToken());
+                if (optionalPerson.isPresent()) {
                     Person admin = optionalPerson.get();
-                    if (!admin.getRole().equals(Role.Admin))
-                    return false;
+                    if (!admin.getRole().equals(Role.ADMIN))
+                        return false;
                 }
 
                 mimeMessageHelper.setSubject(mailContent.getSubject());
@@ -79,7 +80,7 @@ public class MailServiceImp implements MailService {
     }
 
     private String setSubject(MailRole mailRole) {
-        return Objects.requireNonNull(environment.getProperty(String.format("subject.%s",mailRole)));
+        return Objects.requireNonNull(environment.getProperty(String.format("subject.%s", mailRole)));
     }
 
     private String setText(MailRole mailRole, String token) {

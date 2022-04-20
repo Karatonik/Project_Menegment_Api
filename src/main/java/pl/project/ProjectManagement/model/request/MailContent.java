@@ -29,7 +29,7 @@ public class MailContent {
         this.mailRole = mailRole;
         this.isHtmlContent = true;
         this.adminToken="";
-        this.authorType =AuthorType.service;
+        this.authorType =AuthorType.SERVICE;
 
     }
 }

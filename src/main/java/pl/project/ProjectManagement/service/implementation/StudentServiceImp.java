@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StudentServiceImp implements StudentService {//todo
+public class StudentServiceImp implements StudentService {
 
     private final StudentRepository studentRepository;
     private final ProjectRepository projectRepository;
@@ -34,7 +34,7 @@ public class StudentServiceImp implements StudentService {//todo
 
     @Override
     public Student setStudent(Student student) {
-      return this.studentRepository.save(student);
+        return this.studentRepository.save(student);
     }
 
     @Override
@@ -46,8 +46,8 @@ public class StudentServiceImp implements StudentService {//todo
     @Override
     public List<Student> getAllStudents(String adminEmail, String token) {
         Optional<Person> optionalPerson = personRepository.findByEmailAndToken(adminEmail, token);
-        if(optionalPerson.isPresent()){
-            if(optionalPerson.get().getRole().equals(Role.Admin)) {
+        if (optionalPerson.isPresent()) {
+            if (optionalPerson.get().getRole().equals(Role.ADMIN)) {
                 return studentRepository.findAll();
             }
         }
@@ -57,7 +57,7 @@ public class StudentServiceImp implements StudentService {//todo
     @Override
     public boolean updateStudentType(String email, StudyType studyType) {
         Optional<Student> optionalStudent = studentRepository.findById(email);
-        if(optionalStudent.isPresent()){
+        if (optionalStudent.isPresent()) {
             Student student = optionalStudent.get();
             student.setStudyType(studyType);
             studentRepository.save(student);
@@ -69,16 +69,16 @@ public class StudentServiceImp implements StudentService {//todo
     @Override
     public boolean joinToProject(String email, Long projectId) {
         Optional<Project> optionalProject = projectRepository.findById(projectId);
-        if(optionalProject.isPresent()){
+        if (optionalProject.isPresent()) {
             Project project = optionalProject.get();
-            if(project.getAccess().equals(AccessType.Open)){
+            if (project.getAccess().equals(AccessType.OPEN)) {
                 Optional<Student> optionalStudent = studentRepository.findById(email);
-                if(optionalStudent.isPresent()){
+                if (optionalStudent.isPresent()) {
                     List<Student> studentList = project.getStudents();
                     studentList.add(optionalStudent.get());
                     project.setStudents(studentList);
                     projectRepository.save(project);
-                    return  true;
+                    return true;
                 }
             }
         }

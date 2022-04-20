@@ -69,7 +69,7 @@ public class TaskServiceImp implements TaskService {
     public List<Task> getTasks(String adminEmail, String token) {
         Optional<Person> optionalPerson = personRepository.findByEmailAndToken(adminEmail, token);
         if (optionalPerson.isPresent()) {
-            if (optionalPerson.get().getRole().equals(Role.Admin)) {
+            if (optionalPerson.get().getRole().equals(Role.ADMIN)) {
                 return taskRepository.findAll();
             }
         }

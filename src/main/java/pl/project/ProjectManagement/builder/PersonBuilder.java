@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.enums.Role;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -17,6 +18,7 @@ import java.util.Objects;
 @ToString
 public class PersonBuilder implements UserDetails {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String email;
@@ -38,7 +40,7 @@ public class PersonBuilder implements UserDetails {
 
         return new PersonBuilder(
                 person.getEmail(),
-                person.getPassword(),person.getRole());
+                person.getPassword(), person.getRole());
     }
 
     @Override

@@ -9,16 +9,16 @@ import pl.project.ProjectManagement.model.enums.Role;
 @Setter
 @ToString
 public class JwtResponse {
-    private String jwToken;
     private final String type = "Bearer";
+    private String jwToken;
     private String email;
     private Role role;
 
     public JwtResponse() {
-        this.jwToken="";
+        this.jwToken = "";
     }
 
-    public JwtResponse(String jwToken, String email, Role role ) {
+    public JwtResponse(String jwToken, String email, Role role) {
         this.jwToken = jwToken;
         this.email = email;
         this.role = role;

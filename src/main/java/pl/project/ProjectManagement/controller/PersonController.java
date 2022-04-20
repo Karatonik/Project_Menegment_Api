@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/person")
 @CrossOrigin(origins = "*", maxAge = 7200)
-@Tag(name="person", description = "auth and person API")
+@Tag(name = "person", description = "auth and person API")
 public class PersonController {
 
     private final PersonService personService;
@@ -73,7 +73,7 @@ public class PersonController {
     }
 
     @PostMapping("/mail/{to}/{mailRole}")
-    ResponseEntity<?> sendToken(@PathVariable String to, @PathVariable MailRole  mailRole){
+    ResponseEntity<?> sendToken(@PathVariable String to, @PathVariable MailRole mailRole) {
         System.out.println(new MailContent(to, mailRole));
         return SmartResponseEntity.fromBoolean(this.mailService.sendMail(new MailContent(to, mailRole)));
     }

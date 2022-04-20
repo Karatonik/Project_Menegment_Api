@@ -5,7 +5,10 @@ import com.google.common.hash.Hashing;
 import lombok.*;
 import pl.project.ProjectManagement.model.enums.Role;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +38,6 @@ public class Person {
     private Role role;
 
 
-
     @OneToMany(mappedBy = "projectOwner")
     @ToString.Exclude
     private List<Project> ownedProjects;
@@ -44,7 +46,7 @@ public class Person {
         this.ownedProjects = new ArrayList<>();
         this.email = email;
         this.password = password;
-        this.role = Role.User;
+        this.role = Role.USER;
         setToken();
     }
 
