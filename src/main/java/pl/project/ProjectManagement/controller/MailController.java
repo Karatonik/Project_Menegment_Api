@@ -3,7 +3,7 @@ package pl.project.ProjectManagement.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.project.ProjectManagement.model.request.MailContent;
+import pl.project.ProjectManagement.model.request.MailPayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.MailService;
 
@@ -21,7 +21,7 @@ public class MailController {
     }
 
     @PostMapping
-    public ResponseEntity<?> sendMail(@RequestBody MailContent mailContent) {
+    public ResponseEntity<?> sendMail(@RequestBody MailPayload mailContent) {
         return SmartResponseEntity.fromBoolean(mailService.sendMail(mailContent));
     }
 }

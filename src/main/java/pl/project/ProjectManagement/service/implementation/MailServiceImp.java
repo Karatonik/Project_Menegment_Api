@@ -10,7 +10,7 @@ import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.enums.AuthorType;
 import pl.project.ProjectManagement.model.enums.MailRole;
 import pl.project.ProjectManagement.model.enums.Role;
-import pl.project.ProjectManagement.model.request.MailContent;
+import pl.project.ProjectManagement.model.request.MailPayload;
 import pl.project.ProjectManagement.repository.PersonRepository;
 import pl.project.ProjectManagement.service.interfaces.MailService;
 
@@ -39,7 +39,7 @@ public class MailServiceImp implements MailService {
     }
 
     @Override
-    public Boolean sendMail(MailContent mailContent) {
+    public Boolean sendMail(MailPayload mailContent) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);

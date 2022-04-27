@@ -1,8 +1,8 @@
 package pl.project.ProjectManagement.service.interfaces;
 
-import pl.project.ProjectManagement.model.request.MailContent;
+import pl.project.ProjectManagement.model.request.MailPayload;
 
 public interface MailService {
 
-    Boolean sendMail(MailContent mailContent);
+    Boolean sendMail(MailPayload mailContent);
 }

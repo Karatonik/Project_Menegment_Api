@@ -1,6 +1,5 @@
 package pl.project.ProjectManagement.intTests;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -15,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.project.ProjectManagement.ProjectManagementApplication;
-import pl.project.ProjectManagement.model.request.EmailAndPassword;
+import pl.project.ProjectManagement.model.request.AccessDataPayload;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 
@@ -34,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 public class PersonIntTests {
     private final String path = "/person";
-    private final EmailAndPassword ep = new EmailAndPassword("test@test.com", "password123");
+    private final AccessDataPayload ep = new AccessDataPayload("test@test.com", "password123");
     @MockBean
     PersonService personService;
     @Autowired
@@ -44,7 +43,7 @@ public class PersonIntTests {
 
     @Test
     public void setPerson_shouldContainStatus_OK() throws Exception {
-        when(personService.setPerson(any(EmailAndPassword.class))).thenReturn(true);
+        when(personService.setPerson(any(AccessDataPayload.class))).thenReturn(true);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -60,7 +59,7 @@ public class PersonIntTests {
 
     @Test
     public void setPerson_shouldContainStatus_BAD_REQUEST() throws Exception {
-        when(personService.setPerson(any(EmailAndPassword.class))).thenReturn(false);
+        when(personService.setPerson(any(AccessDataPayload.class))).thenReturn(false);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);

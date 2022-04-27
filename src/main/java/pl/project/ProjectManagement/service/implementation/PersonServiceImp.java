@@ -11,7 +11,7 @@ import pl.project.ProjectManagement.builder.PersonBuilder;
 import pl.project.ProjectManagement.jwt.JwtUtils;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.enums.Role;
-import pl.project.ProjectManagement.model.request.EmailAndPassword;
+import pl.project.ProjectManagement.model.request.AccessDataPayload;
 import pl.project.ProjectManagement.model.response.JwtResponse;
 import pl.project.ProjectManagement.repository.PersonRepository;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
@@ -40,7 +40,7 @@ public class PersonServiceImp implements PersonService {
     }
 
     @Override
-    public boolean setPerson(EmailAndPassword emailAndPassword) {
+    public boolean setPerson(AccessDataPayload emailAndPassword) {
         if (this.personRepository.existsById(emailAndPassword.getEmail())) {
             return false;
         }
@@ -52,7 +52,7 @@ public class PersonServiceImp implements PersonService {
     }
 
     @Override
-    public Optional<JwtResponse> authenticate(EmailAndPassword emailAndPassword) {
+    public Optional<JwtResponse> authenticate(AccessDataPayload emailAndPassword) {
         try {
             Authentication authentication = this.authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(emailAndPassword.getEmail(),
@@ -131,7 +131,7 @@ public class PersonServiceImp implements PersonService {
     }
 
     @Override
-    public Optional<String> getAdminToken(EmailAndPassword emailAndPassword) {
+    public Optional<String> getAdminToken(AccessDataPayload emailAndPassword) {
         Optional<Person> optionalPerson = this.personRepository
                 .findByEmailAndPasswordAndRole(emailAndPassword.getEmail(),
                         this.encoder.encode(emailAndPassword.getPassword()),

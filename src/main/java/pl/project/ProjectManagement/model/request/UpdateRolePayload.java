@@ -8,7 +8,7 @@ import pl.project.ProjectManagement.model.enums.Role;
 @Getter
 @Setter
 @ToString
-public class UpdateRoleRequest {
+public class UpdateRolePayload {
 
     private String adminEmail;
     private String adminToken;

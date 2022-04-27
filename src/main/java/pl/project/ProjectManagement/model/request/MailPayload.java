@@ -9,7 +9,7 @@ import pl.project.ProjectManagement.model.enums.MailRole;
 @Getter
 @Setter
 @ToString
-public class MailContent {
+public class MailPayload {
     private String to;
 
     private String subject;
@@ -24,7 +24,7 @@ public class MailContent {
 
     private String adminToken;
 
-    public MailContent(String to, MailRole mailRole) {
+    public MailPayload(String to, MailRole mailRole) {
         this.to = to;
         this.mailRole = mailRole;
         this.isHtmlContent = true;
