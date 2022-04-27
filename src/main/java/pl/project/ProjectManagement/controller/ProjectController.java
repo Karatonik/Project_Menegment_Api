@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.dto.ProjectDto;
 import pl.project.ProjectManagement.model.enums.AccessType;
 import pl.project.ProjectManagement.model.enums.StatusType;
+import pl.project.ProjectManagement.model.request.DescriptionPayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.ProjectService;
@@ -34,13 +35,12 @@ public class ProjectController {
                 setProject(this.modelWrapper.getProjectFromDto(projectDTO))));
     }
 
-    @PutMapping("/des/{description}/{email}")
-    public ResponseEntity<?> updateProjectDescription(@PathVariable @NotBlank String email,
-                                                      @RequestBody @NotBlank Long projectId,
-                                                      @PathVariable @NotBlank String description) {
+    @PutMapping("/des")
+    public ResponseEntity<?> updateProjectDescription(@RequestBody DescriptionPayload descriptionPayload) {
 
         return SmartResponseEntity.fromBoolean(this.projectService
-                .updateProjectDescription(email, projectId, description));
+                .updateProjectDescription(descriptionPayload.getEmail(),
+                        descriptionPayload.getProjectId(), descriptionPayload.getDescription()));
     }
 
     @PutMapping("/name/{name}/{email}")
