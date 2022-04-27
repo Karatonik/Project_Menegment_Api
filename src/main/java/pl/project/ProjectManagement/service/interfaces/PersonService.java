@@ -6,12 +6,13 @@ import pl.project.ProjectManagement.model.request.EmailAndPassword;
 import pl.project.ProjectManagement.model.response.JwtResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PersonService {
 
     boolean setPerson(EmailAndPassword emailAndPassword);
 
-    JwtResponse authenticate(EmailAndPassword emailAndPassword);
+    Optional<JwtResponse> authenticate(EmailAndPassword emailAndPassword);
 
     boolean updatePersonPassword(String token, String newPassword);
 
@@ -23,5 +24,5 @@ public interface PersonService {
 
     List<Person> getAllPerson(String adminEmail, String adminToken);
 
-    String getAdminToken(EmailAndPassword emailAndPassword);
+    Optional<String> getAdminToken(EmailAndPassword emailAndPassword);
 }

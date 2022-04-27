@@ -52,7 +52,7 @@ public class PersonServiceImp implements PersonService {
     }
 
     @Override
-    public JwtResponse authenticate(EmailAndPassword emailAndPassword) {
+    public Optional<JwtResponse> authenticate(EmailAndPassword emailAndPassword) {
         try {
             Authentication authentication = this.authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(emailAndPassword.getEmail(),
@@ -63,11 +63,11 @@ public class PersonServiceImp implements PersonService {
 
             PersonBuilder personBuilder = (PersonBuilder) authentication.getPrincipal();
 
-            return new JwtResponse(jwt, personBuilder.getEmail(), personBuilder.getRole());
+            return Optional.of( new JwtResponse(jwt, personBuilder.getEmail(), personBuilder.getRole()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return new JwtResponse();
+        return Optional.empty();
     }
 
     @Override
@@ -131,7 +131,7 @@ public class PersonServiceImp implements PersonService {
     }
 
     @Override
-    public String getAdminToken(EmailAndPassword emailAndPassword) {
+    public Optional<String> getAdminToken(EmailAndPassword emailAndPassword) {
         Optional<Person> optionalPerson = this.personRepository
                 .findByEmailAndPasswordAndRole(emailAndPassword.getEmail(),
                         this.encoder.encode(emailAndPassword.getPassword()),
@@ -140,8 +140,8 @@ public class PersonServiceImp implements PersonService {
             Person person = optionalPerson.get();
             person.setToken();
             this.personRepository.save(person);
-            return person.getToken();
+            return Optional.of(person.getToken());
         }
-        return "";
+        return Optional.empty();
     }
 }

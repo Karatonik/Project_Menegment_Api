@@ -3,9 +3,11 @@ package pl.project.ProjectManagement.model.response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Optional;
+
 public class SmartResponseEntity {
 
-    static public ResponseEntity<?> fromBoolean(boolean success) {
+    public static ResponseEntity<?> fromBoolean(boolean success) {
         if (success) {
             return new ResponseEntity<>(
                     new ResponseMsg(HttpStatus.OK.toString(), "OK"), HttpStatus.OK);
@@ -16,25 +18,16 @@ public class SmartResponseEntity {
         }
     }
 
-    static public ResponseEntity<?> fromString(String value) {
-        if (value.equals("")) {
-            return new ResponseEntity<>(value, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(
-                    new ResponseMsg(HttpStatus.NOT_FOUND.toString(),
-                            "NOT FOUND"), HttpStatus.NOT_FOUND);
-        }
-    }
 
-    static public ResponseEntity<?> fromJWTResponse(JwtResponse jwtResponse) {
-        if (!jwtResponse.getJwToken().equals("")) {
-            return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(
-                    new ResponseMsg(HttpStatus.NOT_FOUND.toString(),
-                            "NOT FOUND"), HttpStatus.NOT_FOUND);
+  public static ResponseEntity<?> fromOptional(Optional<?> optional){
+        if(optional.isPresent()){
+            return new ResponseEntity<>(optional.get(),HttpStatus.OK);
         }
-    }
+      return new ResponseEntity<>(
+              new ResponseMsg(HttpStatus.NOT_FOUND.toString(),
+                      "NOT FOUND"), HttpStatus.NOT_FOUND);
+  }
+
 
 
 }

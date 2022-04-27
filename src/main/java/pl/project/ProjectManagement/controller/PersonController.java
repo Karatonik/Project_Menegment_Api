@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/person")
 @CrossOrigin(origins = "*", maxAge = 7200)
-@Tag(name = "person", description = "auth and person API")
+@Tag(name = "person")
 public class PersonController {
 
     private final PersonService personService;
@@ -33,7 +33,7 @@ public class PersonController {
 
     @PostMapping("/log")
     public ResponseEntity<?> authenticate(@Valid @RequestBody EmailAndPassword emailAndPassword) {
-        return SmartResponseEntity.fromJWTResponse(this.personService.authenticate(emailAndPassword));
+        return SmartResponseEntity.fromOptional(this.personService.authenticate(emailAndPassword));
     }
 
     @PostMapping("/reg")
@@ -43,7 +43,7 @@ public class PersonController {
 
     @PostMapping("/admin")
     public ResponseEntity<?> getAdminToken(@Valid @RequestBody EmailAndPassword emailAndPassword) {
-        return SmartResponseEntity.fromString(this.personService.getAdminToken(emailAndPassword));
+        return SmartResponseEntity.fromOptional(this.personService.getAdminToken(emailAndPassword));
     }
 
     @PutMapping("/pass/{token}")

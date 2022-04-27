@@ -52,7 +52,7 @@ public class ProjectController {
                 .updateProjectName(email, projectId, name));
     }
 
-    @GetMapping("/{projectId}")//todo
+    @GetMapping("/{projectId}")
     public ResponseEntity<ProjectDto> getProject(@PathVariable @NotBlank Long projectId) {
 
         return ResponseEntity.ok(new ProjectDto(this.projectService.getProject(projectId)));
