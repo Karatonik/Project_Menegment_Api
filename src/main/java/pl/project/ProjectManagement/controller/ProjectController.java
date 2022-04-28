@@ -28,9 +28,13 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<ProjectDto> setProject(ProjectDto projectDTO) {
-        return ResponseEntity.ok(new ProjectDto(this.projectService.
-                setProject(this.modelWrapper.getProjectFromDto(projectDTO))));
+    public ResponseEntity<?> setProject(ProjectDto projectDTO) {
+        ProjectDto projectDto = new ProjectDto(this.projectService.
+                setProject(this.modelWrapper.getProjectFromDto(projectDTO)));
+        if (projectDto.equals(new ProjectDto())) {
+            return SmartResponseEntity.getNotAcceptable();
+        }
+        return ResponseEntity.ok(projectDto);
     }
 
     @PutMapping("/des")
@@ -50,9 +54,12 @@ public class ProjectController {
     }
 
     @GetMapping("/project")
-    public ResponseEntity<ProjectDto> getProject(@RequestBody @NotBlank Long projectId) {
-
-        return ResponseEntity.ok(new ProjectDto(this.projectService.getProject(projectId)));
+    public ResponseEntity<?> getProject(@RequestBody @NotBlank Long projectId) {
+        ProjectDto projectDto = new ProjectDto(this.projectService.getProject(projectId));
+        if (projectDto.equals(new ProjectDto())) {
+            return SmartResponseEntity.getNotAcceptable();
+        }
+        return ResponseEntity.ok(projectDto);
     }
 
     @GetMapping("/list")

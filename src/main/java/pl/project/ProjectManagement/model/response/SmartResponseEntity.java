@@ -27,6 +27,11 @@ public class SmartResponseEntity {
               new ResponseMsg(HttpStatus.NOT_FOUND.toString(),
                       "NOT FOUND"), HttpStatus.NOT_FOUND);
   }
+  public static ResponseEntity<?> getNotAcceptable(){
+      return new ResponseEntity<>(
+              new ResponseMsg(HttpStatus.NOT_ACCEPTABLE.toString(),
+                      "NOT_ACCEPTABLE"), HttpStatus.NOT_ACCEPTABLE);
+  }
 
 
 
