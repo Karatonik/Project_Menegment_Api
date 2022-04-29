@@ -3,14 +3,14 @@ package pl.project.ProjectManagement.model.request;
 import lombok.*;
 import pl.project.ProjectManagement.model.enums.AuthorType;
 import pl.project.ProjectManagement.model.enums.MailRole;
+import pl.project.ProjectManagement.model.request.Parent.EmailPayload;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class MailPayload {
-    private String to;
+public class MailPayload extends EmailPayload {
 
     private String subject;
 
@@ -20,16 +20,16 @@ public class MailPayload {
 
     private MailRole mailRole;
 
-    private  AuthorType authorType;
+    private AuthorType authorType;
 
     private String adminToken;
 
     public MailPayload(String to, MailRole mailRole) {
-        this.to = to;
+        this.email = to;
         this.mailRole = mailRole;
         this.isHtmlContent = true;
-        this.adminToken="";
-        this.authorType =AuthorType.SERVICE;
+        this.adminToken = "";
+        this.authorType = AuthorType.SERVICE;
 
     }
 }

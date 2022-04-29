@@ -1,21 +1,20 @@
 package pl.project.ProjectManagement.model.request;
 
 import lombok.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
 
-import javax.validation.constraints.NotBlank;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class DescriptionPayload {
+public class DescriptionPayload extends WithProjectPayload {
 
-    private String email;
-    private Long projectId;
     private String description;
 
-
+    public DescriptionPayload(String email, Long projectId, String description) {
+        super(email, projectId);
+        this.description = description;
+    }
 }

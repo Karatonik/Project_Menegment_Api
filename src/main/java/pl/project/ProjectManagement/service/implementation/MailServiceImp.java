@@ -43,7 +43,7 @@ public class MailServiceImp implements MailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-            mimeMessageHelper.setTo(mailContent.getTo());
+            mimeMessageHelper.setTo(mailContent.getEmail());
             if (mailContent.getAuthorType().equals(AuthorType.ADMIN)) {
                 Optional<Person> optionalPerson = this.personRepository.findByToken(mailContent.getAdminToken());
                 if (optionalPerson.isPresent()) {
@@ -59,7 +59,7 @@ public class MailServiceImp implements MailService {
             } else {
                 mimeMessageHelper.setSubject(setSubject(mailContent.getMailRole()));
                 mimeMessageHelper.setText(setText(mailContent.getMailRole(),
-                                getPersonToken(mailContent.getTo())),
+                                getPersonToken(mailContent.getEmail())),
                         mailContent.isHtmlContent());
             }
             javaMailSender.send(mimeMessage);

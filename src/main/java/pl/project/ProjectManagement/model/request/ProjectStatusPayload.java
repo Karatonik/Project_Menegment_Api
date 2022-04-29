@@ -1,21 +1,20 @@
 package pl.project.ProjectManagement.model.request;
 
 import lombok.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import pl.project.ProjectManagement.model.enums.StatusType;
-
-import javax.validation.constraints.NotBlank;
+import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class ProjectStatusPayload {
+public class ProjectStatusPayload extends WithProjectPayload {
 
-    private String email;
-
-    private Long projectId;
     private StatusType status;
+
+    public ProjectStatusPayload(String email, Long projectId, StatusType status) {
+        super(email, projectId);
+        this.status = status;
+    }
 }

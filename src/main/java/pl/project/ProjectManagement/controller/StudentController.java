@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.dto.StudentDto;
-import pl.project.ProjectManagement.model.enums.StudyType;
+import pl.project.ProjectManagement.model.request.Parent.AdminAccessPayload;
+import pl.project.ProjectManagement.model.request.Parent.EmailPayload;
+import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
+import pl.project.ProjectManagement.model.request.UpdateStudyTypePayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.StudentService;
@@ -28,37 +31,45 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentDto> setStudent(@RequestBody @NotBlank StudentDto studentDto) {
+    public ResponseEntity<?> setStudent(@RequestBody @NotBlank StudentDto studentDto) {
+        studentDto = new StudentDto(this.studentService.
+                setStudent(this.modelWrapper.getStudentFromDto(studentDto)));
 
-        return ResponseEntity.ok(new StudentDto(this.studentService.
-                setStudent(this.modelWrapper.getStudentFromDto(studentDto))));
+        if (studentDto.equals(new StudentDto())) {
+            return SmartResponseEntity.getNotAcceptable();
+        }
+        return ResponseEntity.ok(studentDto);
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<StudentDto> getStudent(@PathVariable @NotBlank String email) {
+    @GetMapping
+    public ResponseEntity<?> getStudent(@RequestBody @NotBlank EmailPayload payload) {
+        StudentDto studentDto = new StudentDto(this.studentService.getStudent(payload.getEmail()));
 
-        return ResponseEntity.ok(new StudentDto(this.studentService.getStudent(email)));
+        if (studentDto.equals(new StudentDto())) {
+            return SmartResponseEntity.getNotAcceptable();
+        }
+        return ResponseEntity.ok(studentDto);
     }
 
-    @GetMapping("/all/{adminEmail}")
-    public ResponseEntity<List<StudentDto>> getAllStudents(@PathVariable @NotBlank String adminEmail,
-                                                           @RequestBody @NotBlank String token) {
+    @GetMapping("/all")
+    public ResponseEntity<List<StudentDto>> getAllStudents(@RequestBody @NotBlank AdminAccessPayload payload) {
 
         return ResponseEntity.ok(this.studentService.
-                getAllStudents(adminEmail, token).stream().map(StudentDto::new).collect(Collectors.toList()));
+                getAllStudents(payload.getAdminEmail(), payload.getToken())
+                .stream().map(StudentDto::new).collect(Collectors.toList()));
     }
 
-    @PutMapping("/{email}")
-    public ResponseEntity<?> updateStudentType(@PathVariable @NotBlank String email,
-                                               @RequestBody @NotBlank StudyType studyType) {
+    @PutMapping("/type")
+    public ResponseEntity<?> updateStudentType(@RequestBody @NotBlank UpdateStudyTypePayload payload) {
 
-        return SmartResponseEntity.fromBoolean(this.studentService.updateStudentType(email, studyType));
+        return SmartResponseEntity.fromBoolean(this.studentService
+                .updateStudentType(payload.getEmail(), payload.getStudyType()));
     }
 
-    @PutMapping("/join/{email}")
-    public ResponseEntity<?> joinToProject(@PathVariable @NotBlank String email,
-                                           @RequestBody @NotBlank Long projectId) {
+    @PutMapping("/join")
+    public ResponseEntity<?> joinToProject(@RequestBody @NotBlank WithProjectPayload payload) {
 
-        return SmartResponseEntity.fromBoolean(this.studentService.joinToProject(email, projectId));
+        return SmartResponseEntity.fromBoolean(this.studentService
+                .joinToProject(payload.getEmail(), payload.getProjectId()));
     }
 }

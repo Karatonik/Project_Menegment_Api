@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.dto.TaskDto;
+import pl.project.ProjectManagement.model.request.Parent.AdminAccessPayload;
+import pl.project.ProjectManagement.model.request.Parent.TaskPayload;
+import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
+import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.TaskService;
 
@@ -26,30 +30,37 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskDto> setTask(@RequestBody @NotBlank TaskDto taskDto) {
+    public ResponseEntity<?> setTask(@RequestBody @NotBlank TaskDto taskDto) {
+        taskDto = new TaskDto(this.taskService.setTask(modelWrapper.getTaskFromDto(taskDto)));
 
-        return ResponseEntity.ok(new TaskDto(this.taskService.setTask(modelWrapper.getTaskFromDto(taskDto))));
+        if (taskDto.equals(new TaskDto())) {
+            return SmartResponseEntity.getNotAcceptable();
+        }
+        return ResponseEntity.ok(taskDto);
     }
 
     @GetMapping
-    public ResponseEntity<TaskDto> getTask(@RequestBody @NotBlank Long taskId) {
-
-        return ResponseEntity.ok(new TaskDto(this.taskService.getTask(taskId)));
+    public ResponseEntity<?> getTask(@RequestBody @NotBlank TaskPayload payload) {
+        TaskDto taskDto = new TaskDto(this.taskService.getTask(payload.getTaskId()));
+        if (taskDto.equals(new TaskDto())) {
+            return SmartResponseEntity.getNotAcceptable();
+        }
+        return ResponseEntity.ok(taskDto);
     }
 
-    @GetMapping("/project/{email}")
-    public ResponseEntity<List<TaskDto>> getProjectTasks(@PathVariable @NotBlank String email,
-                                                         @RequestBody @NotBlank Long projectId) {
+    @GetMapping("/project")
+    public ResponseEntity<List<TaskDto>> getProjectTasks(@RequestBody @NotBlank WithProjectPayload payload) {
 
         return ResponseEntity.ok(this.taskService
-                .getProjectTasks(email, projectId).stream().map(TaskDto::new).collect(Collectors.toList()));
+                .getProjectTasks(payload.getEmail(), payload.getProjectId())
+                .stream().map(TaskDto::new).collect(Collectors.toList()));
     }
 
-    @GetMapping("{adminEmail}")
-    public ResponseEntity<List<TaskDto>> getTasks(@PathVariable @NotBlank String adminEmail,
-                                                  @RequestBody @NotBlank String token) {
+    @GetMapping("/all")
+    public ResponseEntity<List<TaskDto>> getTasks(@RequestBody @NotBlank AdminAccessPayload payload) {
 
         return ResponseEntity.ok(this.taskService
-                .getTasks(adminEmail, token).stream().map(TaskDto::new).collect(Collectors.toList()));
+                .getTasks(payload.getAdminEmail(), payload.getToken())
+                .stream().map(TaskDto::new).collect(Collectors.toList()));
     }
 }

@@ -63,7 +63,7 @@ public class PersonController {
 
     @PutMapping("/role")
     ResponseEntity<?> updateRole(@RequestBody UpdateRolePayload request) {
-        return SmartResponseEntity.fromBoolean(this.personService.updateRole(request.getAdminEmail(), request.getAdminToken(),
+        return SmartResponseEntity.fromBoolean(this.personService.updateRole(request.getAdminEmail(), request.getToken(),
                 request.getEmail(), request.getRole()));
     }
 

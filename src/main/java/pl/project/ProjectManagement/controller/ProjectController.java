@@ -4,7 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.dto.ProjectDto;
-import pl.project.ProjectManagement.model.request.*;
+import pl.project.ProjectManagement.model.request.DescriptionPayload;
+import pl.project.ProjectManagement.model.request.Parent.EmailPayload;
+import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
+import pl.project.ProjectManagement.model.request.ProjectAccessPayload;
+import pl.project.ProjectManagement.model.request.ProjectNamePayload;
+import pl.project.ProjectManagement.model.request.ProjectStatusPayload;
+import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.ProjectService;
@@ -28,9 +34,9 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<?> setProject(ProjectDto projectDTO) {
-        ProjectDto projectDto = new ProjectDto(this.projectService.
-                setProject(this.modelWrapper.getProjectFromDto(projectDTO)));
+    public ResponseEntity<?> setProject(ProjectDto projectDto) {
+        projectDto = new ProjectDto(this.projectService.
+                setProject(this.modelWrapper.getProjectFromDto(projectDto)));
         if (projectDto.equals(new ProjectDto())) {
             return SmartResponseEntity.getNotAcceptable();
         }
@@ -38,24 +44,23 @@ public class ProjectController {
     }
 
     @PutMapping("/des")
-    public ResponseEntity<?> updateProjectDescription(@RequestBody DescriptionPayload descriptionPayload) {
-
+    public ResponseEntity<?> updateProjectDescription(@RequestBody @NotBlank DescriptionPayload payload) {
         return SmartResponseEntity.fromBoolean(this.projectService
-                .updateProjectDescription(descriptionPayload.getEmail(),
-                        descriptionPayload.getProjectId(), descriptionPayload.getDescription()));
+                .updateProjectDescription(payload.getEmail(),
+                        payload.getProjectId(), payload.getDescription()));
     }
 
     @PutMapping("/name")
-    public ResponseEntity<?> updateProjectName(@RequestBody ProjectNamePayload projectNamePayload) {
+    public ResponseEntity<?> updateProjectName(@RequestBody @NotBlank ProjectNamePayload payload) {
 
         return SmartResponseEntity.fromBoolean(this.projectService
-                .updateProjectName(projectNamePayload.getEmail(),
-                        projectNamePayload.getProjectId(), projectNamePayload.getName()));
+                .updateProjectName(payload.getEmail(),
+                        payload.getProjectId(), payload.getName()));
     }
 
     @GetMapping("/project")
-    public ResponseEntity<?> getProject(@RequestBody @NotBlank Long projectId) {
-        ProjectDto projectDto = new ProjectDto(this.projectService.getProject(projectId));
+    public ResponseEntity<?> getProject(@RequestBody @NotBlank ProjectPayload payload) {
+        ProjectDto projectDto = new ProjectDto(this.projectService.getProject(payload.getProjectId()));
         if (projectDto.equals(new ProjectDto())) {
             return SmartResponseEntity.getNotAcceptable();
         }
@@ -63,33 +68,34 @@ public class ProjectController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<ProjectDto>> getProjects(@RequestBody @NotBlank String email) {
+    public ResponseEntity<List<ProjectDto>> getProjects(@RequestBody @NotBlank EmailPayload payload) {
 
         return ResponseEntity.ok(this.projectService
-                .getProjects(email).stream().map(ProjectDto::new).collect(Collectors.toList()));
+                .getProjects(payload.getEmail())
+                .stream().map(ProjectDto::new).collect(Collectors.toList()));
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteProject(@RequestBody ProjectDeletePayload projectDeletePayload) {
+    public ResponseEntity<?> deleteProject(@RequestBody @NotBlank WithProjectPayload payload) {
 
         return SmartResponseEntity.fromBoolean(this.projectService
-                .deleteProject(projectDeletePayload.getEmail(), projectDeletePayload.getProjectId()));
+                .deleteProject(payload.getEmail(), payload.getProjectId()));
     }
 
     @PutMapping("/access")
-    public ResponseEntity<?> updateProjectAccess(@RequestBody ProjectAccessPayload projectAccessPayload) {
+    public ResponseEntity<?> updateProjectAccess(@RequestBody @NotBlank ProjectAccessPayload payload) {
 
         return SmartResponseEntity.fromBoolean(this.projectService
-                .updateProjectAccess(projectAccessPayload.getEmail(), projectAccessPayload.getProjectId(),
-                        projectAccessPayload.getAccess()));
+                .updateProjectAccess(payload.getEmail(), payload.getProjectId(),
+                        payload.getAccess()));
     }
 
     @PutMapping("/status")
-    public ResponseEntity<?> updateProjectStatus(@RequestBody ProjectStatusPayload projectStatusPayload) {
+    public ResponseEntity<?> updateProjectStatus(@RequestBody @NotBlank ProjectStatusPayload payload) {
 
         return SmartResponseEntity.fromBoolean(this.projectService
-                .updateProjectStatus(projectStatusPayload.getEmail(), projectStatusPayload.getProjectId(),
-                        projectStatusPayload.getStatus()));
+                .updateProjectStatus(payload.getEmail(), payload.getProjectId(),
+                        payload.getStatus()));
     }
 
 }
