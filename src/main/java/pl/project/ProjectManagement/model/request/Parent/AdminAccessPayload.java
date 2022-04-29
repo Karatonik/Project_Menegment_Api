@@ -7,9 +7,12 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class AdminAccessPayload {
+public class AdminAccessPayload extends TokenPayload{
 
     private String adminEmail;
 
-    private String token;
+    public AdminAccessPayload(String token, String adminEmail) {
+        super(token);
+        this.adminEmail = adminEmail;
+    }
 }

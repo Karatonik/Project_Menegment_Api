@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.enums.MailRole;
-import pl.project.ProjectManagement.model.request.AccessDataPayload;
-import pl.project.ProjectManagement.model.request.MailPayload;
-import pl.project.ProjectManagement.model.request.UpdateRolePayload;
+import pl.project.ProjectManagement.model.request.*;
+import pl.project.ProjectManagement.model.request.Parent.AdminAccessPayload;
+import pl.project.ProjectManagement.model.request.Parent.EmailPayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.MailService;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
@@ -32,49 +32,52 @@ public class PersonController {
     }
 
     @PostMapping("/log")
-    public ResponseEntity<?> authenticate(@Valid @RequestBody AccessDataPayload emailAndPassword) {
-        return SmartResponseEntity.fromOptional(this.personService.authenticate(emailAndPassword));
+    public ResponseEntity<?> authenticate(@Valid @RequestBody AccessDataPayload payload) {
+        return SmartResponseEntity.fromOptional(this.personService.authenticate(payload));
     }
 
     @PostMapping("/reg")
-    public ResponseEntity<?> setPerson(@Valid @RequestBody AccessDataPayload emailAndPassword) {
-        return SmartResponseEntity.fromBoolean(this.personService.setPerson(emailAndPassword));
+    public ResponseEntity<?> setPerson(@Valid @RequestBody AccessDataPayload payload) {
+        return SmartResponseEntity.fromBoolean(this.personService.setPerson(payload));
     }
 
     @PostMapping("/admin")
-    public ResponseEntity<?> getAdminToken(@Valid @RequestBody AccessDataPayload emailAndPassword) {
-        return SmartResponseEntity.fromOptional(this.personService.getAdminToken(emailAndPassword));
+    public ResponseEntity<?> getAdminToken(@Valid @RequestBody AccessDataPayload payload) {
+        return SmartResponseEntity.fromOptional(this.personService.getAdminToken(payload));
     }
 
-    @PutMapping("/pass/{token}")
-    public ResponseEntity<?> updatePersonPassword(@PathVariable String token, @RequestBody String newPassword) {
-        return SmartResponseEntity.fromBoolean(this.personService.updatePersonPassword(token, newPassword));
+    @PutMapping("/pass")
+    public ResponseEntity<?> updatePersonPassword(@Valid @RequestBody TokenWithPasswordPayload payload) {
+        return SmartResponseEntity.fromBoolean(this.personService
+                .updatePersonPassword(payload.getToken(), payload.getPassword()));
     }
 
-    @DeleteMapping("/{token}")
-    public ResponseEntity<?> deletePerson(@PathVariable String token, @RequestBody String password) {
-        return SmartResponseEntity.fromBoolean(this.personService.deletePerson(token, password));
+    @DeleteMapping
+    public ResponseEntity<?> deletePerson(@Valid @RequestBody TokenWithPasswordPayload payload) {
+        return SmartResponseEntity.fromBoolean(this.personService.deletePerson(payload.getToken(),
+                payload.getPassword()));
     }
 
-    @PutMapping("/email/{token}")
-    public ResponseEntity<?> updateEmail(@PathVariable String token, @RequestBody String newEmail) {
-        return SmartResponseEntity.fromBoolean(this.personService.updateEmail(token, newEmail));
+    @PutMapping("/email")
+    public ResponseEntity<?> updateEmail(@Valid @RequestBody TokenWithEmailPayload payload) {
+        return SmartResponseEntity.fromBoolean(this.personService.updateEmail(payload.getToken(),
+                payload.getEmail()));
     }
 
     @PutMapping("/role")
-    ResponseEntity<?> updateRole(@RequestBody UpdateRolePayload request) {
-        return SmartResponseEntity.fromBoolean(this.personService.updateRole(request.getAdminEmail(), request.getToken(),
-                request.getEmail(), request.getRole()));
+    ResponseEntity<?> updateRole(@RequestBody UpdateRolePayload payload) {
+        return SmartResponseEntity.fromBoolean(this.personService.updateRole(payload.getAdminEmail(),
+                payload.getToken(), payload.getEmail(), payload.getRole()));
     }
 
     @GetMapping("/all")
-    ResponseEntity<List<Person>> getAllPerson(@RequestBody String adminEmail, @RequestBody String adminToken) {
-        return ResponseEntity.ok(this.personService.getAllPerson(adminEmail, adminToken));
+    ResponseEntity<List<Person>> getAllPerson(@RequestBody AdminAccessPayload payload) {
+        return ResponseEntity.ok(this.personService.getAllPerson(payload.getAdminEmail(), payload.getToken()));
     }
 
-    @PostMapping("/mail/{to}/{mailRole}")
-    ResponseEntity<?> sendToken(@PathVariable String to, @PathVariable MailRole mailRole) {
-        System.out.println(new MailPayload(to, mailRole));
-        return SmartResponseEntity.fromBoolean(this.mailService.sendMail(new MailPayload(to, mailRole)));
+    @PostMapping("/mail/{mailRole}")
+    ResponseEntity<?> sendToken(@RequestBody EmailPayload payload, @PathVariable MailRole mailRole) {
+        return SmartResponseEntity.fromBoolean(this.mailService
+                .sendMail(new MailPayload(payload.getEmail(), mailRole)));
     }
 }
