@@ -1,6 +1,8 @@
 package pl.project.ProjectManagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.dto.TaskDto;
@@ -11,8 +13,7 @@ import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.TaskService;
 
-import javax.validation.constraints.NotBlank;
-import java.util.List;
+import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,7 +31,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<?> setTask(@RequestBody @NotBlank TaskDto taskDto) {
+    public ResponseEntity<?> setTask(@RequestBody @Valid TaskDto taskDto) {
         taskDto = new TaskDto(this.taskService.setTask(modelWrapper.getTaskFromDto(taskDto)));
 
         if (taskDto.equals(new TaskDto())) {
@@ -40,7 +41,7 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getTask(@RequestBody @NotBlank TaskPayload payload) {
+    public ResponseEntity<?> getTask(@RequestBody @Valid TaskPayload payload) {
         TaskDto taskDto = new TaskDto(this.taskService.getTask(payload.getTaskId()));
         if (taskDto.equals(new TaskDto())) {
             return SmartResponseEntity.getNotAcceptable();
@@ -49,18 +50,20 @@ public class TaskController {
     }
 
     @GetMapping("/project")
-    public ResponseEntity<List<TaskDto>> getProjectTasks(@RequestBody @NotBlank WithProjectPayload payload) {
+    public ResponseEntity<?> getProjectTasks(@RequestBody @Valid WithProjectPayload payload,
+                                             Pageable pageable, long size) {
 
-        return ResponseEntity.ok(this.taskService
+        return ResponseEntity.ok(new PageImpl<>(this.taskService
                 .getProjectTasks(payload.getEmail(), payload.getProjectId())
-                .stream().map(TaskDto::new).collect(Collectors.toList()));
+                .stream().map(TaskDto::new).collect(Collectors.toList()), pageable, size));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<TaskDto>> getTasks(@RequestBody @NotBlank AdminAccessPayload payload) {
+    public ResponseEntity<?> getTasks(@RequestBody @Valid AdminAccessPayload payload,
+                                      Pageable pageable, long size) {
 
-        return ResponseEntity.ok(this.taskService
+        return ResponseEntity.ok(new PageImpl<>(this.taskService
                 .getTasks(payload.getAdminEmail(), payload.getToken())
-                .stream().map(TaskDto::new).collect(Collectors.toList()));
+                .stream().map(TaskDto::new).collect(Collectors.toList()), pageable, size));
     }
 }

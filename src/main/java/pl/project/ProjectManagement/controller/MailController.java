@@ -7,6 +7,8 @@ import pl.project.ProjectManagement.model.request.MailPayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.MailService;
 
+import javax.validation.Valid;
+
 
 @RestController
 @RequestMapping("/mail")
@@ -21,7 +23,7 @@ public class MailController {
     }
 
     @PostMapping
-    public ResponseEntity<?> sendMail(@RequestBody MailPayload mailContent) {
+    public ResponseEntity<?> sendMail(@RequestBody @Valid MailPayload mailContent) {
         return SmartResponseEntity.fromBoolean(mailService.sendMail(mailContent));
     }
 }

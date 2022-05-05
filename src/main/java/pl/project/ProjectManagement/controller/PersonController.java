@@ -2,6 +2,8 @@ package pl.project.ProjectManagement.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.Person;
@@ -14,7 +16,6 @@ import pl.project.ProjectManagement.service.interfaces.MailService;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/person")
@@ -65,18 +66,20 @@ public class PersonController {
     }
 
     @PutMapping("/role")
-    ResponseEntity<?> updateRole(@RequestBody UpdateRolePayload payload) {
+    ResponseEntity<?> updateRole(@RequestBody @Valid UpdateRolePayload payload) {
         return SmartResponseEntity.fromBoolean(this.personService.updateRole(payload.getAdminEmail(),
                 payload.getToken(), payload.getEmail(), payload.getRole()));
     }
 
     @GetMapping("/all")
-    ResponseEntity<List<Person>> getAllPerson(@RequestBody AdminAccessPayload payload) {
-        return ResponseEntity.ok(this.personService.getAllPerson(payload.getAdminEmail(), payload.getToken()));
+    ResponseEntity<?> getAllPerson(@RequestBody @Valid AdminAccessPayload payload,
+                                   Pageable pageable,long size) {
+        return ResponseEntity.ok(new PageImpl<>(this.personService
+                .getAllPerson(payload.getAdminEmail(), payload.getToken()), pageable, size));
     }
 
     @PostMapping("/mail/{mailRole}")
-    ResponseEntity<?> sendToken(@RequestBody EmailPayload payload, @PathVariable MailRole mailRole) {
+    ResponseEntity<?> sendToken(@RequestBody @Valid EmailPayload payload, @PathVariable MailRole mailRole) {
         return SmartResponseEntity.fromBoolean(this.mailService
                 .sendMail(new MailPayload(payload.getEmail(), mailRole)));
     }

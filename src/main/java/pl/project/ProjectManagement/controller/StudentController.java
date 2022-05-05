@@ -1,6 +1,8 @@
 package pl.project.ProjectManagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.dto.StudentDto;
@@ -12,8 +14,8 @@ import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.StudentService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -42,7 +44,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getStudent(@RequestBody @NotBlank EmailPayload payload) {
+    public ResponseEntity<?> getStudent(@RequestBody @Valid EmailPayload payload) {
         StudentDto studentDto = new StudentDto(this.studentService.getStudent(payload.getEmail()));
 
         if (studentDto.equals(new StudentDto())) {
@@ -52,22 +54,23 @@ public class StudentController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<StudentDto>> getAllStudents(@RequestBody @NotBlank AdminAccessPayload payload) {
+    public ResponseEntity<?> getAllStudents(@RequestBody @Valid AdminAccessPayload payload,
+                                            Pageable pageable, long size) {
 
-        return ResponseEntity.ok(this.studentService.
+        return ResponseEntity.ok(new PageImpl<>(this.studentService.
                 getAllStudents(payload.getAdminEmail(), payload.getToken())
-                .stream().map(StudentDto::new).collect(Collectors.toList()));
+                .stream().map(StudentDto::new).collect(Collectors.toList()), pageable, size));
     }
 
     @PutMapping("/type")
-    public ResponseEntity<?> updateStudentType(@RequestBody @NotBlank UpdateStudyTypePayload payload) {
+    public ResponseEntity<?> updateStudentType(@RequestBody @Valid UpdateStudyTypePayload payload) {
 
         return SmartResponseEntity.fromBoolean(this.studentService
                 .updateStudentType(payload.getEmail(), payload.getStudyType()));
     }
 
     @PutMapping("/join")
-    public ResponseEntity<?> joinToProject(@RequestBody @NotBlank WithProjectPayload payload) {
+    public ResponseEntity<?> joinToProject(@RequestBody @Valid WithProjectPayload payload) {
 
         return SmartResponseEntity.fromBoolean(this.studentService
                 .joinToProject(payload.getEmail(), payload.getProjectId()));
