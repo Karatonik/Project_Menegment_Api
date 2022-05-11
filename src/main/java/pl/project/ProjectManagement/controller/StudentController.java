@@ -33,7 +33,7 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> setStudent(@RequestBody @NotBlank StudentDto studentDto) {
+    public ResponseEntity<?> setStudent(@RequestBody  StudentDto studentDto) {
         studentDto = new StudentDto(this.studentService.
                 setStudent(this.modelWrapper.getStudentFromDto(studentDto)));
 
