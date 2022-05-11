@@ -35,7 +35,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<?> setProject(@RequestBody ProjectDto projectDto) {
+    public ResponseEntity<?> setProject(@RequestBody @Valid ProjectDto projectDto) throws Exception {
         projectDto = new ProjectDto(this.projectService.
                 setProject(this.modelWrapper.getProjectFromDto(projectDto)));
         if (projectDto.equals(new ProjectDto())) {

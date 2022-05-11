@@ -24,11 +24,7 @@ public class ModelWrapperImp implements ModelWrapper {
     private final TaskResultRepository taskResultRepository;
 
     @Autowired
-    public ModelWrapperImp(ProjectRepository projectRepository,
-                           StudentRepository studentRepository,
-                           PersonRepository personRepository,
-                           TaskRepository taskRepository,
-                           TaskResultRepository taskResultRepository) {
+    public ModelWrapperImp(ProjectRepository projectRepository, StudentRepository studentRepository, PersonRepository personRepository, TaskRepository taskRepository, TaskResultRepository taskResultRepository) {
         this.projectRepository = projectRepository;
         this.studentRepository = studentRepository;
         this.personRepository = personRepository;
@@ -38,11 +34,14 @@ public class ModelWrapperImp implements ModelWrapper {
 
     @Override
     public Project getProjectFromDto(ProjectDto dto) {
-        Project project;
-        Optional<Project> optionalProject = this.projectRepository.findById(dto.getProjectId());
+        Project project = new Project();
+
+        if (dto.getProjectId() != null) {
+            Optional<Project> optionalProject = this.projectRepository.findById(dto.getProjectId());
+            project = optionalProject.orElse(new Project());
+        }
         Optional<Person> optionalPerson = this.personRepository.findById(dto.getProjectOwnerEmail());
 
-        project = optionalProject.orElse(new Project());
         project.setProjectId(dto.getProjectId());
         project.setName(dto.getName());
         project.setDescription(dto.getDescription());
@@ -59,14 +58,15 @@ public class ModelWrapperImp implements ModelWrapper {
 
     @Override
     public Student getStudentFromDto(StudentDto dto) {
-        Optional<Person> optionalPerson = this.personRepository.findById(dto.getPersonEmail());
-
         Student student = new Student();
+        if (dto.getPersonEmail() != null) {
+            Optional<Person> optionalPerson = this.personRepository.findById(dto.getPersonEmail());
+            student.setPerson(optionalPerson.orElse(new Person()));
+        }
         student.setEmail(dto.getEmail());
         student.setSurname(dto.getSurname());
         student.setIndex_number(dto.getIndex_number());
         student.setStudyType(dto.getStudyType());
-        student.setPerson(optionalPerson.orElse(new Person()));
         student.setProjects(new HashSet<>(this.projectRepository.findAllById(dto.getProjectsIds())));
 
         return student;
@@ -74,16 +74,19 @@ public class ModelWrapperImp implements ModelWrapper {
 
     @Override
     public Task getTaskFromDto(TaskDto dto) {
-        Task task;
-        Optional<Task> optionalTask = taskRepository.findById(dto.getTaskId());
-        Optional<Project> optionalProject = projectRepository.findById(dto.getProjectIds());
+        Task task = new Task();
+        if (dto.getTaskId() != null) {
+            Optional<Task> optionalTask = taskRepository.findById(dto.getTaskId());
+            task = optionalTask.orElse(new Task());
+        }
+        if (dto.getProjectIds() != null) {
+            Optional<Project> optionalProject = projectRepository.findById(dto.getProjectIds());
+            task.setProject(optionalProject.orElse(new Project()));
+        }
 
-        task = optionalTask.orElse(new Task());
         task.setName(dto.getName());
         task.setOrderNumber(dto.getOrderNumber());
         task.setDateTimeAdded(dto.getDateTimeAdded());
-        task.setProject(optionalProject.orElse(new Project()));
-
         return task;
     }
 
