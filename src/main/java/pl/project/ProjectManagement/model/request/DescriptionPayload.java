@@ -13,8 +13,8 @@ public class DescriptionPayload extends WithProjectPayload {
 
     private String description;
 
-    public DescriptionPayload(String email, Long projectId, String description) {
-        super(email, projectId);
+    public DescriptionPayload(Long projectId, String description) {
+        super(projectId);
         this.description = description;
     }
 }

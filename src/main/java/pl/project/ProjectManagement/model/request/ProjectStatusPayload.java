@@ -13,8 +13,8 @@ public class ProjectStatusPayload extends WithProjectPayload {
 
     private StatusType status;
 
-    public ProjectStatusPayload(String email, Long projectId, StatusType status) {
-        super(email, projectId);
+    public ProjectStatusPayload(Long projectId, StatusType status) {
+        super(projectId);
         this.status = status;
     }
 }

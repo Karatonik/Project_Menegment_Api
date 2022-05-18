@@ -14,8 +14,8 @@ public class ProjectAccessPayload extends WithProjectPayload {
 
     private AccessType access;
 
-    public ProjectAccessPayload(String email, Long projectId, AccessType access) {
-        super(email, projectId);
+    public ProjectAccessPayload(Long projectId, AccessType access) {
+        super(projectId);
         this.access = access;
     }
 }

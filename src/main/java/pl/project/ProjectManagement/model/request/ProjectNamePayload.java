@@ -13,8 +13,8 @@ public class ProjectNamePayload extends WithProjectPayload {
 
     private String name;
 
-    public ProjectNamePayload(String email, Long projectId, String name) {
-        super(email, projectId);
+    public ProjectNamePayload(Long projectId, String name) {
+        super(projectId);
         this.name = name;
     }
 }

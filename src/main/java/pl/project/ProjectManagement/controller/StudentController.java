@@ -6,16 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.dto.StudentDto;
-import pl.project.ProjectManagement.model.request.Parent.AdminAccessPayload;
-import pl.project.ProjectManagement.model.request.Parent.EmailPayload;
-import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
 import pl.project.ProjectManagement.model.request.UpdateStudyTypePayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
+import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.StudentService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,14 +23,17 @@ public class StudentController {
     private final StudentService studentService;
     private final ModelWrapper modelWrapper;
 
+    private final InfoService infoService;
+
     @Autowired
-    public StudentController(StudentService studentService, ModelWrapper modelWrapper) {
+    public StudentController(StudentService studentService, ModelWrapper modelWrapper, InfoService infoService) {
         this.studentService = studentService;
         this.modelWrapper = modelWrapper;
+        this.infoService = infoService;
     }
 
     @PostMapping
-    public ResponseEntity<?> setStudent(@RequestBody  StudentDto studentDto) {
+    public ResponseEntity<?> setStudent(@RequestBody StudentDto studentDto) {
         studentDto = new StudentDto(this.studentService.
                 setStudent(this.modelWrapper.getStudentFromDto(studentDto)));
 
@@ -44,8 +44,9 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getStudent(@RequestBody @Valid EmailPayload payload) {
-        StudentDto studentDto = new StudentDto(this.studentService.getStudent(payload.getEmail()));
+    public ResponseEntity<?> getStudent(@RequestHeader("Authorization") String authorization) {
+        StudentDto studentDto = new StudentDto(this.studentService.getStudent(this.infoService
+                .getEmailFromJwt(authorization)));
 
         if (studentDto.equals(new StudentDto())) {
             return SmartResponseEntity.getNotAcceptable();
@@ -53,26 +54,30 @@ public class StudentController {
         return ResponseEntity.ok(studentDto);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllStudents(@RequestBody @Valid AdminAccessPayload payload,
+    @GetMapping("/all/{token}")
+    public ResponseEntity<?> getAllStudents(@RequestHeader("Authorization") String authorization,
+                                            @PathVariable String token,
                                             Pageable pageable, long size) {
 
         return ResponseEntity.ok(new PageImpl<>(this.studentService.
-                getAllStudents(payload.getAdminEmail(), payload.getToken())
+                getAllStudents(this.infoService.getEmailFromJwt(authorization), token)
                 .stream().map(StudentDto::new).collect(Collectors.toList()), pageable, size));
     }
 
     @PutMapping("/type")
-    public ResponseEntity<?> updateStudentType(@RequestBody @Valid UpdateStudyTypePayload payload) {
+    public ResponseEntity<?> updateStudentType(@RequestHeader("Authorization") String authorization,
+                                               @RequestBody @Valid UpdateStudyTypePayload payload) {
 
         return SmartResponseEntity.fromBoolean(this.studentService
-                .updateStudentType(payload.getEmail(), payload.getStudyType()));
+                .updateStudentType(this.infoService
+                        .getEmailFromJwt(authorization), payload.getStudyType()));
     }
 
-    @PutMapping("/join")
-    public ResponseEntity<?> joinToProject(@RequestBody @Valid WithProjectPayload payload) {
+    @PutMapping("/join/{projectId}")
+    public ResponseEntity<?> joinToProject(@RequestHeader("Authorization") String authorization,
+                                           @PathVariable long projectId) {
 
         return SmartResponseEntity.fromBoolean(this.studentService
-                .joinToProject(payload.getEmail(), payload.getProjectId()));
+                .joinToProject(this.infoService.getEmailFromJwt(authorization), projectId));
     }
 }

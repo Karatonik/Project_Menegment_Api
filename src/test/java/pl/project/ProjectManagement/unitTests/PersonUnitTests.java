@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class PersonUnitTests {
 
-    private final AccessDataPayload ep = new AccessDataPayload("test@test.com", "password123");
+    private final AccessDataPayload ep = new AccessDataPayload("test@test.com");
     @Mock
     PersonService personService;
     @InjectMocks

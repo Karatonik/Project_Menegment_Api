@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 public class PersonIntTests {
     private final String path = "/person";
-    private final AccessDataPayload ep = new AccessDataPayload("test@test.com", "password123");
+    private final AccessDataPayload ep = new AccessDataPayload("test@test.com");
     @MockBean
     PersonService personService;
     @Autowired

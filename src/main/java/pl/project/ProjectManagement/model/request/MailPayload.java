@@ -3,14 +3,14 @@ package pl.project.ProjectManagement.model.request;
 import lombok.*;
 import pl.project.ProjectManagement.model.enums.AuthorType;
 import pl.project.ProjectManagement.model.enums.MailRole;
-import pl.project.ProjectManagement.model.request.Parent.EmailPayload;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class MailPayload extends EmailPayload {
+public class MailPayload{
+    private String email;
 
     private String subject;
 

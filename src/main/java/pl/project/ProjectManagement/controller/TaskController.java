@@ -6,10 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.dto.TaskDto;
-import pl.project.ProjectManagement.model.request.Parent.AdminAccessPayload;
-import pl.project.ProjectManagement.model.request.Parent.TaskPayload;
 import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
+import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.TaskService;
 
@@ -24,10 +23,13 @@ public class TaskController {
     private final TaskService taskService;
     private final ModelWrapper modelWrapper;
 
+    private final InfoService infoService;
+
     @Autowired
-    public TaskController(TaskService taskService, ModelWrapper modelWrapper) {
+    public TaskController(TaskService taskService, ModelWrapper modelWrapper, InfoService infoService) {
         this.taskService = taskService;
         this.modelWrapper = modelWrapper;
+        this.infoService = infoService;
     }
 
     @PostMapping
@@ -40,9 +42,9 @@ public class TaskController {
         return ResponseEntity.ok(taskDto);
     }
 
-    @GetMapping
-    public ResponseEntity<?> getTask(@RequestBody @Valid TaskPayload payload) {
-        TaskDto taskDto = new TaskDto(this.taskService.getTask(payload.getTaskId()));
+    @GetMapping("/{taskId}")
+    public ResponseEntity<?> getTask(@PathVariable long taskId) {
+        TaskDto taskDto = new TaskDto(this.taskService.getTask(taskId));
         if (taskDto.equals(new TaskDto())) {
             return SmartResponseEntity.getNotAcceptable();
         }
@@ -50,20 +52,21 @@ public class TaskController {
     }
 
     @GetMapping("/project")
-    public ResponseEntity<?> getProjectTasks(@RequestBody @Valid WithProjectPayload payload,
+    public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization,
+                                             @RequestBody @Valid WithProjectPayload payload,
                                              Pageable pageable, long size) {
 
         return ResponseEntity.ok(new PageImpl<>(this.taskService
-                .getProjectTasks(payload.getEmail(), payload.getProjectId())
+                .getProjectTasks(this.infoService.getEmailFromJwt(authorization), payload.getProjectId())
                 .stream().map(TaskDto::new).collect(Collectors.toList()), pageable, size));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getTasks(@RequestBody @Valid AdminAccessPayload payload,
-                                      Pageable pageable, long size) {
+    @GetMapping("/all/{token}")
+    public ResponseEntity<?> getTasks(@RequestHeader("Authorization") String authorization,
+                                      @PathVariable String token, Pageable pageable, long size) {
 
         return ResponseEntity.ok(new PageImpl<>(this.taskService
-                .getTasks(payload.getAdminEmail(), payload.getToken())
+                .getTasks(this.infoService.getEmailFromJwt(authorization), token)
                 .stream().map(TaskDto::new).collect(Collectors.toList()), pageable, size));
     }
 }
