@@ -5,15 +5,16 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.project.ProjectManagement.jwt.JwtUtils;
 import pl.project.ProjectManagement.model.dto.ProjectDto;
 import pl.project.ProjectManagement.model.request.DescriptionPayload;
-import pl.project.ProjectManagement.model.request.Parent.EmailPayload;
 import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
 import pl.project.ProjectManagement.model.request.ProjectAccessPayload;
 import pl.project.ProjectManagement.model.request.ProjectNamePayload;
 import pl.project.ProjectManagement.model.request.ProjectStatusPayload;
 import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
+import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.ProjectService;
 
@@ -28,10 +29,15 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ModelWrapper modelWrapper;
 
+    private final InfoService infoService;
+
+
+
     @Autowired
-    public ProjectController(ProjectService projectService, ModelWrapper modelWrapper) {
+    public ProjectController(ProjectService projectService, ModelWrapper modelWrapper, InfoService infoService) {
         this.projectService = projectService;
         this.modelWrapper = modelWrapper;
+        this.infoService = infoService;
     }
 
     @PostMapping
@@ -68,12 +74,12 @@ public class ProjectController {
         return ResponseEntity.ok(projectDto);
     }
 
-    @GetMapping("/list/{email}")
-    public ResponseEntity<?> getProjects(@PathVariable  String email,
+    @GetMapping("/list")
+    public ResponseEntity<?> getProjects(@RequestHeader("Authorization") String authorization,
                                          Pageable pageable, long size) {
 
         return ResponseEntity.ok(new PageImpl<>(this.projectService
-                .getProjects(email)
+                .getProjects(infoService.getEmailFromJwt(authorization))
                 .stream().map(ProjectDto::new).collect(Collectors.toList()), pageable, size));
     }
 

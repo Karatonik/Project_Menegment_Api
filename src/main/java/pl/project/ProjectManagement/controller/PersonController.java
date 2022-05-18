@@ -33,7 +33,7 @@ public class PersonController {
     }
 
     @PostMapping("/log")
-    public ResponseEntity<?> authenticate(@Valid @RequestBody AccessDataPayload payload) {
+    public ResponseEntity<?> authenticate( @Valid @RequestBody AccessDataPayload payload) {
         return SmartResponseEntity.fromOptional(this.personService.authenticate(payload));
     }
 
