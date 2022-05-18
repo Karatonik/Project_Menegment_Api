@@ -1,5 +1,6 @@
 package pl.project.ProjectManagement.intTests;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -14,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.project.ProjectManagement.ProjectManagementApplication;
-import pl.project.ProjectManagement.model.request.AccessDataPayload;
+import pl.project.ProjectManagement.model.request.EmailAndPassword;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 
@@ -33,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 public class PersonIntTests {
     private final String path = "/person";
-    private final AccessDataPayload ep = new AccessDataPayload("test@test.com");
+    private final EmailAndPassword ep = new EmailAndPassword("test@test.com", "password123");
     @MockBean
     PersonService personService;
     @Autowired
@@ -43,7 +44,7 @@ public class PersonIntTests {
 
     @Test
     public void setPerson_shouldContainStatus_OK() throws Exception {
-        when(personService.setPerson(any(AccessDataPayload.class))).thenReturn(true);
+        when(personService.setPerson(any(EmailAndPassword.class))).thenReturn(true);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -59,7 +60,7 @@ public class PersonIntTests {
 
     @Test
     public void setPerson_shouldContainStatus_BAD_REQUEST() throws Exception {
-        when(personService.setPerson(any(AccessDataPayload.class))).thenReturn(false);
+        when(personService.setPerson(any(EmailAndPassword.class))).thenReturn(false);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -73,4 +74,101 @@ public class PersonIntTests {
                 .andExpect(content().string(containsString("BAD_REQUEST")));
     }
 
+    @Test
+    public void updatePersonPassword_shouldContainStatus_OK() throws Exception {
+        when(personService.updatePersonPassword(anyString(), anyString())).thenReturn(true);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString("token", "test123");
+
+        mvc.perform(post(String.format("$s/pass/{token}", path)).content(requestJson)
+                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("OK")));
+    }
+
+    @Test
+    public void updatePersonPassword_shouldContainStatus_BAD_REQUEST() throws Exception {
+        when(personService.updatePersonPassword(anyString(), anyString())).thenReturn(false);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString("token", "test123");
+
+        mvc.perform(post(String.format("$s/pass/{token}", path)).content(requestJson)
+                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("BAD_REQUEST")));
+    }
+
+    @Test
+    public void deletePerson_shouldContainStatus_OK() throws Exception {
+        when(personService.deletePerson(anyString(),anyString())).thenReturn(true);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(" token", " pass");
+
+        mvc.perform(post(String.format("$s/{token}", path)).content(requestJson)
+                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("OK")));
+    }
+
+    @Test
+    public void deletePerson_shouldContainStatus_BAD_REQUEST() throws Exception {
+        when(personService.deletePerson(anyString(),anyString())).thenReturn(false);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(" token", " pass");
+
+        mvc.perform(post(String.format("$s/{token}", path)).content(requestJson)
+                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("BAD_REQUEST")));
+    }
+
+    @Test
+    public void updateEmail_shouldContainStatus_OK() throws Exception {
+        when(personService.updateEmail(anyString(), anyString())).thenReturn(true);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString( "token", " new@email.pl");
+
+        mvc.perform(post(String.format("$s/email/{token}", path)).content(requestJson)
+                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("OK")));
+    }
+
+    @Test
+    public void updateEmail_shouldContainStatus_BAD_REQUEST() throws Exception {
+        when(personService.updateEmail(anyString(), anyString())).thenReturn(false);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString( "token", " new@email.pl");
+
+        mvc.perform(post(String.format("$s/email/{token}", path)).content(requestJson)
+                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("BAD_REQUEST")));
+    }
+
+    
 }
