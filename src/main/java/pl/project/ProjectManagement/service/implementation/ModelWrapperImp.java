@@ -64,6 +64,7 @@ public class ModelWrapperImp implements ModelWrapper {
             student.setPerson(optionalPerson.orElse(new Person()));
         }
         student.setEmail(dto.getEmail());
+        student.setName(dto.getName());
         student.setSurname(dto.getSurname());
         student.setIndex_number(dto.getIndex_number());
         student.setStudyType(dto.getStudyType());
