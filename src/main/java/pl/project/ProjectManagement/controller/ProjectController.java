@@ -68,12 +68,12 @@ public class ProjectController {
         return ResponseEntity.ok(projectDto);
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<?> getProjects(@RequestBody @Valid EmailPayload payload,
+    @GetMapping("/list/{email}")
+    public ResponseEntity<?> getProjects(@PathVariable  String email,
                                          Pageable pageable, long size) {
 
         return ResponseEntity.ok(new PageImpl<>(this.projectService
-                .getProjects(payload.getEmail())
+                .getProjects(email)
                 .stream().map(ProjectDto::new).collect(Collectors.toList()), pageable, size));
     }
 
