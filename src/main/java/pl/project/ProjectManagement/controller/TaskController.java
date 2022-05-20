@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.dto.TaskDto;
-import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
+import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
@@ -53,7 +53,7 @@ public class TaskController {
 
     @GetMapping("/project")
     public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization,
-                                             @RequestBody @Valid WithProjectPayload payload,
+                                             @RequestBody @Valid ProjectPayload payload,
                                              Pageable pageable, long size) {
 
         return ResponseEntity.ok(new PageImpl<>(this.taskService

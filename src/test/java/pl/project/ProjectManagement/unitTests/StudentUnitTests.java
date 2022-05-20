@@ -12,7 +12,6 @@ import pl.project.ProjectManagement.controller.PersonController;
 import pl.project.ProjectManagement.controller.StudentController;
 import pl.project.ProjectManagement.model.Student;
 import pl.project.ProjectManagement.model.dto.StudentDto;
-import pl.project.ProjectManagement.model.request.EmailAndPassword;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 import pl.project.ProjectManagement.service.interfaces.StudentService;
 
@@ -29,7 +28,7 @@ import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class StudentUnitTests {
-
+/*
     private final Student ep = new Student("aaa@aa.pl", "Adam", "Wala", "113251", STATIONARY, any(), "aaa@tes1t.pl");
 
     @Mock
@@ -113,6 +112,9 @@ public class StudentUnitTests {
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
 
     }
+
+
+ */
 
 
 

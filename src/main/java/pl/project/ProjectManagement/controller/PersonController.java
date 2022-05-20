@@ -50,7 +50,7 @@ public class PersonController {
     }
 
     @PutMapping("/pass")
-    public ResponseEntity<?> updatePersonPassword(@Valid @RequestBody TokenWithPasswordPayload payload) {
+    public ResponseEntity<?> updatePersonPassword(@RequestBody TokenWithPasswordPayload payload) {
         return SmartResponseEntity.fromBoolean(this.personService.updatePersonPassword(payload.getToken(), payload.getPassword()));
     }
 

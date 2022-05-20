@@ -72,6 +72,8 @@ public class Project {
         this.tasks = tasks;
         this.students = students;
         this.projectOwner = projectOwner;
+        this.access = AccessType.CLOSE;
+        this.status = StatusType.CONTINUES;
     }
 
     @Override

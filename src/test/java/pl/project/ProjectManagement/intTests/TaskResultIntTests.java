@@ -15,7 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.project.ProjectManagement.ProjectManagementApplication;
-import pl.project.ProjectManagement.model.request.EmailAndPassword;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 import pl.project.ProjectManagement.service.interfaces.TaskResultService;
@@ -34,9 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {ProjectManagementApplication.class})
 @SpringBootTest
 public class TaskResultIntTests {
-
+/*
     private final String path = "/res";
-    private final EmailAndPassword ep = new EmailAndPassword("test@test.com", "password123");
     @MockBean
     TaskResultService taskResultService;
     @Autowired
@@ -140,5 +138,7 @@ public class TaskResultIntTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("BAD_REQUEST")));
     }
+
+ */
 
 }

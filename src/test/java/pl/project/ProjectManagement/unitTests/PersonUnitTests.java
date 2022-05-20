@@ -8,7 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import pl.project.ProjectManagement.controller.PersonController;
-import pl.project.ProjectManagement.model.request.EmailAndPassword;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,8 +17,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PersonUnitTests {
-
-    private final EmailAndPassword ep = new EmailAndPassword("test@test.com", "password123");
+   /*
     @Mock
     PersonService personService;
     @InjectMocks
@@ -129,6 +127,8 @@ public class PersonUnitTests {
 //
 
     // }
+
+    */
 
 
 }

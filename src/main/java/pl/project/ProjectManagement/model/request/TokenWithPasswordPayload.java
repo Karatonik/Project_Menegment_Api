@@ -7,7 +7,6 @@ import pl.project.ProjectManagement.model.request.Parent.TokenPayload;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
 public class TokenWithPasswordPayload extends TokenPayload {
 
     private String password;
@@ -15,5 +14,12 @@ public class TokenWithPasswordPayload extends TokenPayload {
     public TokenWithPasswordPayload(String token, String password) {
         super(token);
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +"token=" +getToken()+
+                ", password='" + password + '\'' +
+                '}';
     }
 }

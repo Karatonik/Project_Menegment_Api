@@ -2,14 +2,14 @@ package pl.project.ProjectManagement.model.request;
 
 import lombok.*;
 import pl.project.ProjectManagement.model.enums.StatusType;
-import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
+import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class ProjectStatusPayload extends WithProjectPayload {
+public class ProjectStatusPayload extends ProjectPayload {
 
     private StatusType status;
 

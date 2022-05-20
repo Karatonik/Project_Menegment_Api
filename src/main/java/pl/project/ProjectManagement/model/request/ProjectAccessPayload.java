@@ -2,7 +2,7 @@ package pl.project.ProjectManagement.model.request;
 
 import lombok.*;
 import pl.project.ProjectManagement.model.enums.AccessType;
-import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
+import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
 
 
 @NoArgsConstructor
@@ -10,7 +10,7 @@ import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPaylo
 @Getter
 @Setter
 @ToString
-public class ProjectAccessPayload extends WithProjectPayload {
+public class ProjectAccessPayload extends ProjectPayload {
 
     private AccessType access;
 
