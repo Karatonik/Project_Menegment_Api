@@ -34,24 +34,15 @@ public class TaskResultController {
 
     @PostMapping
     public ResponseEntity<?> setTaskResult(@RequestBody @Valid TaskResultDto taskResultDto) {
-        taskResultDto = new TaskResultDto(this.taskResultService
-                .setTaskResult(this.modelWrapper.getTaskResultFromTaskResultDto(taskResultDto)));
-        if (taskResultDto.equals(new TaskResultDto())) {
-            return SmartResponseEntity.getNotAcceptable();
-        }
-        return ResponseEntity.ok(taskResultDto);
+        return ResponseEntity.ok( new TaskResultDto(this.taskResultService
+                .setTaskResult(this.modelWrapper.getTaskResultFromTaskResultDto(taskResultDto))));
     }
 
     @GetMapping("/{taskId}")
     public ResponseEntity<?> getTaskResult(@RequestHeader("Authorization") String authorization,
                                            @PathVariable long taskId) {
-        TaskResultDto taskResultDto = new TaskResultDto(this.taskResultService
-                .getTaskResult(taskId, this.infoService.getEmailFromJwt(authorization)));
-        if (taskResultDto.equals(new TaskResultDto())) {
-            return SmartResponseEntity.getNotAcceptable();
-        }
-        return ResponseEntity.ok(taskResultDto);
-
+        return ResponseEntity.ok( new TaskResultDto(this.taskResultService
+                .getTaskResult(taskId, this.infoService.getEmailFromJwt(authorization))));
     }
 
     @GetMapping("/task/{taskId}")

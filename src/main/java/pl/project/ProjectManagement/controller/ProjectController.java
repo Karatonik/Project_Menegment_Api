@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.dto.ProjectDto;
 import pl.project.ProjectManagement.model.request.DescriptionPayload;
+import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
 import pl.project.ProjectManagement.model.request.ProjectAccessPayload;
 import pl.project.ProjectManagement.model.request.ProjectNamePayload;
 import pl.project.ProjectManagement.model.request.ProjectStatusPayload;
-import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
@@ -38,73 +38,47 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<?> setProject(@RequestBody @Valid ProjectDto projectDto) {
-        projectDto = new ProjectDto(this.projectService.setProject(this.modelWrapper.getProjectFromDto(projectDto)));
-        if (projectDto.equals(new ProjectDto())) {
-            return SmartResponseEntity.getNotAcceptable();
-        }
-        return ResponseEntity.ok(projectDto);
+        return ResponseEntity.ok(new ProjectDto(this.projectService.setProject(this.modelWrapper.getProjectFromDto(projectDto))));
     }
 
     @PutMapping("/des")
-    public ResponseEntity<?> updateProjectDescription(@RequestHeader("Authorization") String authorization,
-                                                      @RequestBody @Valid DescriptionPayload payload) {
-        return SmartResponseEntity.fromBoolean(this.projectService
-                .updateProjectDescription(this.infoService.getEmailFromJwt(authorization),
-                        payload.getProjectId(), payload.getDescription()));
+    public ResponseEntity<?> updateProjectDescription(@RequestHeader("Authorization") String authorization, @RequestBody @Valid DescriptionPayload payload) {
+        return SmartResponseEntity.fromBoolean(this.projectService.updateProjectDescription(this.infoService.getEmailFromJwt(authorization), payload.getProjectId(), payload.getDescription()));
     }
 
     @PutMapping("/name")
-    public ResponseEntity<?> updateProjectName(@RequestHeader("Authorization") String authorization,
-                                               @RequestBody @Valid ProjectNamePayload payload) {
+    public ResponseEntity<?> updateProjectName(@RequestHeader("Authorization") String authorization, @RequestBody @Valid ProjectNamePayload payload) {
 
-        return SmartResponseEntity.fromBoolean(this.projectService
-                .updateProjectName(this.infoService.getEmailFromJwt(authorization),
-                        payload.getProjectId(), payload.getName()));
+        return SmartResponseEntity.fromBoolean(this.projectService.updateProjectName(this.infoService.getEmailFromJwt(authorization), payload.getProjectId(), payload.getName()));
     }
 
     @GetMapping("/project/{projectId}")
     public ResponseEntity<?> getProject(@PathVariable long projectId) {
-        ProjectDto projectDto = new ProjectDto(this.projectService.getProject(projectId));
-        if (projectDto.equals(new ProjectDto())) {
-            return SmartResponseEntity.getNotAcceptable();
-        }
-        return ResponseEntity.ok(projectDto);
+        return ResponseEntity.ok(new ProjectDto(this.projectService.getProject(projectId)));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> getProjects(@RequestHeader("Authorization") String authorization,
-                                         Pageable pageable, long size) {
+    public ResponseEntity<?> getProjects(@RequestHeader("Authorization") String authorization, Pageable pageable, long size) {
 
-        return ResponseEntity.ok(new PageImpl<>(this.projectService
-                .getProjects(this.infoService.getEmailFromJwt(authorization))
-                .stream().map(ProjectDto::new).collect(Collectors.toList()), pageable, size));
+        return ResponseEntity.ok(new PageImpl<>(this.projectService.getProjects(this.infoService.getEmailFromJwt(authorization)).stream().map(ProjectDto::new).collect(Collectors.toList()), pageable, size));
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteProject(@RequestHeader("Authorization") String authorization,
-                                           @RequestBody @Valid WithProjectPayload payload) {
+    public ResponseEntity<?> deleteProject(@RequestHeader("Authorization") String authorization, @RequestBody @Valid ProjectPayload payload) {
 
-        return SmartResponseEntity.fromBoolean(this.projectService
-                .deleteProject(this.infoService.getEmailFromJwt(authorization),
-                        payload.getProjectId()));
+        return SmartResponseEntity.fromBoolean(this.projectService.deleteProject(this.infoService.getEmailFromJwt(authorization), payload.getProjectId()));
     }
 
     @PutMapping("/access")
-    public ResponseEntity<?> updateProjectAccess(@RequestHeader("Authorization") String authorization,
-                                                 @RequestBody @Valid ProjectAccessPayload payload) {
+    public ResponseEntity<?> updateProjectAccess(@RequestHeader("Authorization") String authorization, @RequestBody @Valid ProjectAccessPayload payload) {
 
-        return SmartResponseEntity.fromBoolean(this.projectService
-                .updateProjectAccess(this.infoService.getEmailFromJwt(authorization),
-                        payload.getProjectId(), payload.getAccess()));
+        return SmartResponseEntity.fromBoolean(this.projectService.updateProjectAccess(this.infoService.getEmailFromJwt(authorization), payload.getProjectId(), payload.getAccess()));
     }
 
     @PutMapping("/status")
-    public ResponseEntity<?> updateProjectStatus(@RequestHeader("Authorization") String authorization,
-                                                 @RequestBody @Valid ProjectStatusPayload payload) {
+    public ResponseEntity<?> updateProjectStatus(@RequestHeader("Authorization") String authorization, @RequestBody @Valid ProjectStatusPayload payload) {
 
-        return SmartResponseEntity.fromBoolean(this.projectService
-                .updateProjectStatus(this.infoService.getEmailFromJwt(authorization),
-                        payload.getProjectId(), payload.getStatus()));
+        return SmartResponseEntity.fromBoolean(this.projectService.updateProjectStatus(this.infoService.getEmailFromJwt(authorization), payload.getProjectId(), payload.getStatus()));
     }
 
 }

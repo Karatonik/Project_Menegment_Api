@@ -50,7 +50,7 @@ public class PersonController {
     }
 
     @PutMapping("/pass")
-    public ResponseEntity<?> updatePersonPassword(@Valid @RequestBody TokenWithPasswordPayload payload) {
+    public ResponseEntity<?> updatePersonPassword(@RequestBody TokenWithPasswordPayload payload) {
         return SmartResponseEntity.fromBoolean(this.personService.updatePersonPassword(payload.getToken(), payload.getPassword()));
     }
 
@@ -65,17 +65,17 @@ public class PersonController {
     }
 
     @PutMapping("/role")
-    ResponseEntity<?> updateRole(@RequestHeader("Authorization") String authorization, @RequestBody @Valid UpdateRolePayload payload) {
-        return SmartResponseEntity.fromBoolean(this.personService.updateRole(payload.getAdminEmail(), payload.getToken(), this.infoService.getEmailFromJwt(authorization), payload.getRole()));
+    public ResponseEntity<?> updateRole(@RequestHeader("Authorization") String authorization, @RequestBody @Valid UpdateRolePayload payload) {
+        return SmartResponseEntity.fromBoolean(this.personService.updateRole(this.infoService.getEmailFromJwt(authorization), payload.getToken(), payload.getEmail(), payload.getRole()));
     }
 
     @GetMapping("/all")
-    ResponseEntity<?> getAllPerson(@RequestHeader("Authorization") String authorization, @RequestBody @Valid TokenPayload payload, Pageable pageable, long size) {
+    public ResponseEntity<?> getAllPerson(@RequestHeader("Authorization") String authorization, @RequestBody @Valid TokenPayload payload, Pageable pageable, long size) {
         return ResponseEntity.ok(new PageImpl<>(this.personService.getAllPerson(this.infoService.getEmailFromJwt(authorization), payload.getToken()), pageable, size));
     }
 
     @PostMapping("/mail/{mailRole}")
-    ResponseEntity<?> sendToken(@RequestHeader("Authorization") String authorization, @PathVariable MailRole mailRole) {
+    public ResponseEntity<?> sendToken(@RequestHeader("Authorization") String authorization, @PathVariable MailRole mailRole) {
         return SmartResponseEntity.fromBoolean(this.mailService.sendMail(new MailPayload(this.infoService.getEmailFromJwt(authorization), mailRole)));
     }
 }

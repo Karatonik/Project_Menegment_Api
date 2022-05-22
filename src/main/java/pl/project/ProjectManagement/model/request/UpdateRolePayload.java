@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 @ToString
 public class UpdateRolePayload{
 
-    private String adminEmail;
+    private String email;
     private String token;
     private Role role;
 }

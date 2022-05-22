@@ -1,7 +1,7 @@
 package pl.project.ProjectManagement.model.request;
 
 import lombok.*;
-import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
+import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
 
 
 @NoArgsConstructor
@@ -9,7 +9,7 @@ import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPaylo
 @Getter
 @Setter
 @ToString
-public class ProjectNamePayload extends WithProjectPayload {
+public class ProjectNamePayload extends ProjectPayload {
 
     private String name;
 

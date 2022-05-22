@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.dto.TaskDto;
-import pl.project.ProjectManagement.model.request.SecoundParent.WithProjectPayload;
+import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
@@ -34,30 +34,21 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<?> setTask(@RequestBody @Valid TaskDto taskDto) {
-        taskDto = new TaskDto(this.taskService.setTask(modelWrapper.getTaskFromDto(taskDto)));
-
-        if (taskDto.equals(new TaskDto())) {
-            return SmartResponseEntity.getNotAcceptable();
-        }
-        return ResponseEntity.ok(taskDto);
+        return ResponseEntity.ok(new TaskDto(this.taskService.setTask(modelWrapper.getTaskFromDto(taskDto))));
     }
 
     @GetMapping("/{taskId}")
     public ResponseEntity<?> getTask(@PathVariable long taskId) {
-        TaskDto taskDto = new TaskDto(this.taskService.getTask(taskId));
-        if (taskDto.equals(new TaskDto())) {
-            return SmartResponseEntity.getNotAcceptable();
-        }
-        return ResponseEntity.ok(taskDto);
+        return ResponseEntity.ok(new TaskDto(this.taskService.getTask(taskId)));
     }
 
-    @GetMapping("/project")
+    @GetMapping("/project/{projectId}")
     public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization,
-                                             @RequestBody @Valid WithProjectPayload payload,
+                                             @PathVariable long projectId,
                                              Pageable pageable, long size) {
 
         return ResponseEntity.ok(new PageImpl<>(this.taskService
-                .getProjectTasks(this.infoService.getEmailFromJwt(authorization), payload.getProjectId())
+                .getProjectTasks(this.infoService.getEmailFromJwt(authorization), projectId)
                 .stream().map(TaskDto::new).collect(Collectors.toList()), pageable, size));
     }
 

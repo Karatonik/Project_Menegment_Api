@@ -34,24 +34,13 @@ public class StudentController {
 
     @PostMapping
     public ResponseEntity<?> setStudent(@RequestBody StudentDto studentDto) {
-        studentDto = new StudentDto(this.studentService.
-                setStudent(this.modelWrapper.getStudentFromDto(studentDto)));
-
-        if (studentDto.equals(new StudentDto())) {
-            return SmartResponseEntity.getNotAcceptable();
-        }
-        return ResponseEntity.ok(studentDto);
+        return ResponseEntity.ok(new StudentDto(this.studentService.
+                setStudent(this.modelWrapper.getStudentFromDto(studentDto))));
     }
-
     @GetMapping
     public ResponseEntity<?> getStudent(@RequestHeader("Authorization") String authorization) {
-        StudentDto studentDto = new StudentDto(this.studentService.getStudent(this.infoService
-                .getEmailFromJwt(authorization)));
-
-        if (studentDto.equals(new StudentDto())) {
-            return SmartResponseEntity.getNotAcceptable();
-        }
-        return ResponseEntity.ok(studentDto);
+       return ResponseEntity.ok( new StudentDto(this.studentService.getStudent(this.infoService
+                .getEmailFromJwt(authorization))));
     }
 
     @GetMapping("/all/{token}")
