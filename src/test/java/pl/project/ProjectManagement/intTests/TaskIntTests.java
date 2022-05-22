@@ -1,6 +1,5 @@
 package pl.project.ProjectManagement.intTests;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -18,10 +17,11 @@ import pl.project.ProjectManagement.ProjectManagementApplication;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.Project;
 import pl.project.ProjectManagement.model.Task;
+import pl.project.ProjectManagement.model.dto.TaskDto;
 import pl.project.ProjectManagement.model.enums.AccessType;
 import pl.project.ProjectManagement.model.enums.StatusType;
+import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
-import pl.project.ProjectManagement.service.interfaces.PersonService;
 import pl.project.ProjectManagement.service.interfaces.TaskService;
 
 import java.time.LocalDate;
@@ -44,146 +44,112 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TaskIntTests {
 
     private final String path = "/task";
-    @MockBean
-    TaskService taskService;
     private final Person person = new Person("test@test.pl", "password123");
     private final Project project = new Project(1L, "Test", "Opis", LocalDateTime.now(),
             AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now(), LocalDate.now(), this.person, new ArrayList<>(), new ArrayList<>());
-
-    private final Task task = new Task(1L, "Test",1,"Opis", LocalDateTime.now(),this.project, new ArrayList<>());
-
-
+    private final Task task = new Task(1L, "Test", 1, "Opis", LocalDateTime.now(), this.project, new ArrayList<>());
+    private final TaskDto dto = new TaskDto(this.task);
+    @MockBean
+    TaskService taskService;
+    @MockBean
+    InfoService infoService;
     @Autowired
     private MockMvc mvc;
     @MockBean
     private ModelWrapper modelWrapper;
-/*
+
     @Test
-    public void setTask_shouldContainStatus_OK() throws Exception {
-        when(taskService.setTask(any())).thenReturn(true);
+    public void setTask_OK() throws Exception {
+        when(this.taskService.setTask(any(Task.class))).thenReturn(this.task);
+        when(this.modelWrapper.getTaskFromDto(any(TaskDto.class))).thenReturn(this.task);
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString();
+        ObjectWriter ow = mapper.writer().withoutRootName();
+        String requestJson = ow.writeValueAsString(this.dto);
 
-        mvc.perform(post(String.format("", path)).content(requestJson)
+        this.mvc.perform(post(this.path).content(requestJson)
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("OK")));
+                .andExpect(content().string(containsString("Test")));
     }
 
     @Test
-    public void setTask_shouldContainStatus_BAD_REQUEST() throws Exception {
-        when(taskService.setTask(any())).thenReturn(false);
+    public void getTask_OK() throws Exception {
+        when(taskService.getTask(anyLong())).thenReturn(this.task);
+        long taskId = 1;
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString();
-
-        mvc.perform(post(String.format("", path)).content(requestJson)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("BAD_REQUEST")));
-    }
-
-    @Test
-    public void getTask_shouldContainStatus_OK() throws Exception {
-        when(taskService.getTask(any())).thenReturn(true);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(1L);
-
-        mvc.perform(post(String.format("", path)).content(requestJson)
+        mvc.perform(get(String.format("%s/%d", this.path, taskId))
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("OK")));
+                .andExpect(content().string(containsString("Test")));
+    }
+
+
+    @Test
+    public void getProjectTasks_OK() throws Exception {
+        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
+        when(this.taskService.getProjectTasks(anyString(), any())).thenReturn(new ArrayList<>());
+        long projectId = 1;
+        int page = 0;
+        int size = 12;
+        String sort = "asc";
+
+        this.mvc.perform(get(String.format("%s/project/%d?page=%d&size=%d&sort=%s",
+                        this.path, projectId, page, size, sort))
+                        .header("Authorization", "Token")
+                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void getTask_shouldContainStatus_BAD_REQUEST() throws Exception {
-        when(taskService.getTask(any())).thenReturn(false);
+    public void getProjectTasks_withoutHeader_BadRequest() throws Exception {
+        when(this.taskService.getProjectTasks(anyString(), any())).thenReturn(new ArrayList<>());
+        long projectId = 1;
+        int page = 0;
+        int size = 12;
+        String sort = "asc";
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(-2L);
-
-        mvc.perform(post(String.format("", path)).content(requestJson)
+        this.mvc.perform(get(String.format("%s/project/%d?page=%d&size=%d&sort=%s",
+                        this.path, projectId, page, size, sort))
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("BAD_REQUEST")));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void getProjectTasks_shouldContainStatus_OK() throws Exception {
-        when(taskService.getProjectTasks(anyString(), any())).thenReturn(true);
+    public void getTasks_OK() throws Exception {
+        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
+        when(this.taskService.getTasks(anyString(), any())).thenReturn(new ArrayList<>());
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString("test@test.pl", 1L);
+        String token = "token";
+        int page = 0;
+        int size = 12;
+        String sort = "asc";
 
-        mvc.perform(post(String.format("%s/project/{email}", path)).content(requestJson)
+        this.mvc.perform(get(String.format("%s/all/%s?page=%d&size=%d&sort=%s", this.path, token, page, size, sort))
+                        .header("Authorization", "Token")
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("OK")));
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void getProjectTasks_shouldContainStatus_BAD_REQUEST() throws Exception {
-        when(taskService.getProjectTasks(anyString(), any())).thenReturn(false);
+    public void getTasks_withoutHeader_BadRequest() throws Exception {
+        when(this.taskService.getTasks(anyString(), any())).thenReturn(new ArrayList<>());
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString("a@@.pl", -5L);
+        String token = "token";
+        int page = 0;
+        int size = 12;
+        String sort = "asc";
 
-        mvc.perform(post(String.format("%s/project/{email}", path)).content(requestJson)
+        this.mvc.perform(get(String.format("%s/all/%s?page=%d&size=%d&sort=%s", this.path, token, page, size, sort))
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("BAD_REQUEST")));
+                .andExpect(status().isBadRequest());
     }
-
-    @Test
-    public void getTasks_shouldContainStatus_OK() throws Exception {
-        when(taskService.getTasks(anyString(), any())).thenReturn(true);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString("admin1@aa.pl", any());
-
-        mvc.perform(post(String.format("%s/{adminEmail}", path)).content(requestJson)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("OK")));
-    }
-
-    @Test
-    public void getTasks_shouldContainStatus_BAD_REQUEST() throws Exception {
-        when(taskService.getTasks(anyString(), any())).thenReturn(false);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString("admin1@@aa.pl", any());
-
-        mvc.perform(post(String.format("%s/{adminEmail}", path)).content(requestJson)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("BAD_REQUEST")));
-    }
-    */
 }

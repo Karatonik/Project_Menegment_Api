@@ -23,6 +23,7 @@ import pl.project.ProjectManagement.model.request.DescriptionPayload;
 import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
 import pl.project.ProjectManagement.model.request.ProjectAccessPayload;
 import pl.project.ProjectManagement.model.request.ProjectNamePayload;
+import pl.project.ProjectManagement.model.request.ProjectStatusPayload;
 import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.ProjectService;
@@ -353,14 +354,14 @@ public class ProjectIntTests {
 
     @Test
     public void updateProjectStatus_OK() throws Exception {
-        ProjectAccessPayload projectAccessPayload = new ProjectAccessPayload(1L, AccessType.CLOSE);
+        ProjectStatusPayload projectStatusPayload = new ProjectStatusPayload(1L, StatusType.CLOSE);
         when(this.projectService.updateProjectStatus(anyString(), anyLong(), any())).thenReturn(true);
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withoutRootName();
-        String requestJson = ow.writeValueAsString(projectAccessPayload);
+        String requestJson = ow.writeValueAsString(projectStatusPayload);
 
         mvc.perform(put(String.format("%s/status", this.path)).content(requestJson)
                         .header("Authorization", "Token")
@@ -372,14 +373,14 @@ public class ProjectIntTests {
 
     @Test
     public void updateProjectStatus_BadRequest() throws Exception {
-        ProjectAccessPayload projectAccessPayload = new ProjectAccessPayload(1L, AccessType.CLOSE);
+        ProjectStatusPayload projectStatusPayload = new ProjectStatusPayload(1L, StatusType.CLOSE);
         when(this.projectService.updateProjectStatus(anyString(), anyLong(), any())).thenReturn(false);
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withoutRootName();
-        String requestJson = ow.writeValueAsString(projectAccessPayload);
+        String requestJson = ow.writeValueAsString(projectStatusPayload);
 
         mvc.perform(put(String.format("%s/status", this.path)).content(requestJson)
                         .header("Authorization", "Token")

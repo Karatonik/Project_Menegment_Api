@@ -1,5 +1,5 @@
 package pl.project.ProjectManagement.intTests;
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -21,15 +21,14 @@ import pl.project.ProjectManagement.model.enums.StudyType;
 import pl.project.ProjectManagement.model.request.UpdateStudyTypePayload;
 import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
-import pl.project.ProjectManagement.service.interfaces.PersonService;
 import pl.project.ProjectManagement.service.interfaces.StudentService;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 
 import static org.hamcrest.core.StringContains.containsString;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -44,20 +43,18 @@ import static pl.project.ProjectManagement.model.enums.StudyType.STATIONARY;
 public class StudentIntTests {
 
     private final String path = "/student";
+    private final Person person = new Person("test@test.pl", "password123");
+    private final Student student = new Student("test@test.pl", "Jan",
+            "Kowalski", "11111", STATIONARY, Collections.emptySet(), new ArrayList<>(), person);
+    private final StudentDto dto = new StudentDto(student);
     @MockBean
     StudentService studentService;
-
     @MockBean
     InfoService infoService;
-    private final Person person = new Person("test@test.pl", "password123");
-    private final Student student = new Student("test@test.pl","Jan",
-            "Kowalski","11111", STATIONARY, Collections.emptySet() ,new ArrayList<>(),person );
-    private final StudentDto dto = new StudentDto(student);
     @Autowired
     private MockMvc mvc;
     @MockBean
     private ModelWrapper modelWrapper;
-
 
 
     @Test
@@ -77,9 +74,6 @@ public class StudentIntTests {
                 .andExpect(content().string(containsString("test@test.pl")));
 
     }
-
-
-
     @Test
     public void getStudent_OK() throws Exception {
         when(this.studentService.getStudent(anyString())).thenReturn(this.student);
@@ -171,13 +165,14 @@ public class StudentIntTests {
         when(this.studentService.joinToProject(anyString(), any())).thenReturn(true);
         long projectId = 1L;
 
-        this.mvc.perform(put(String.format("%s/join/%d", this.path,projectId))
+        this.mvc.perform(put(String.format("%s/join/%d", this.path, projectId))
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
 
     }
+
     @Test
     public void joinToProject_BAD_REQUEST() throws Exception {
         when(this.studentService.joinToProject(anyString(), any())).thenReturn(false);
@@ -191,9 +186,6 @@ public class StudentIntTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("BAD_REQUEST")));
     }
-
-
-
 
 
 }

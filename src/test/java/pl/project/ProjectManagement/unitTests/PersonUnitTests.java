@@ -8,7 +8,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import pl.project.ProjectManagement.controller.PersonController;
+import pl.project.ProjectManagement.model.enums.Role;
+import pl.project.ProjectManagement.model.request.AccessDataPayload;
+import pl.project.ProjectManagement.model.request.TokenWithEmailPayload;
+import pl.project.ProjectManagement.model.request.TokenWithPasswordPayload;
+import pl.project.ProjectManagement.model.request.UpdateRolePayload;
+import pl.project.ProjectManagement.model.response.JwtResponse;
+import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -17,66 +26,108 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PersonUnitTests {
-   /*
+
     @Mock
     PersonService personService;
+    @Mock
+    InfoService infoService;
+
+    private final AccessDataPayload accessData = new AccessDataPayload("test@test.com", "password123");
+
+    private final TokenWithPasswordPayload tokenWithPasswordPayload = new TokenWithPasswordPayload("token",
+            "test123");
+    private final TokenWithEmailPayload tokenWithEmailPayload = new TokenWithEmailPayload("token",
+            "test@test.com");
     @InjectMocks
     PersonController personController;
 
     @Test
     public void setPerson_shouldContainStatus_OK() {
-        when(personService.setPerson(any(EmailAndPassword.class))).thenReturn(true);
+        when(this.personService.setPerson(any(AccessDataPayload.class))).thenReturn(true );
 
-        ResponseEntity<?> response = personController.setPerson(ep);
+        ResponseEntity<?> response = this.personController.setPerson(this.accessData);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
     @Test
     public void setPerson_shouldContainStatus_BAD_REQUEST() {
-        when(personService.setPerson(any(EmailAndPassword.class))).thenReturn(false);
+        when(this.personService.setPerson(any(AccessDataPayload.class))).thenReturn(false);
 
-        ResponseEntity<?> response = personController.setPerson(ep);
+        ResponseEntity<?> response = this.personController.setPerson(this.accessData);
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
+    @Test
+    public void authenticate_shouldContainStatus_OK() {
+        JwtResponse jwtResponse = new JwtResponse("Jwt","test@test.pl", Role.USER);
+        when(this.personService.authenticate(any(AccessDataPayload.class))).thenReturn(Optional.of(jwtResponse));
+
+        ResponseEntity<?> response = this.personController.authenticate(this.accessData);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
 
     @Test
-      void getAdminToken() {
-     }
+    public void authenticate_shouldContainStatus_BAD_REQUEST() {
+        when(this.personService.authenticate(any(AccessDataPayload.class))).thenReturn(Optional.empty());
+
+        ResponseEntity<?> response = this.personController.authenticate(this.accessData);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+    }
+
+    @Test
+    public void getAdminToken_shouldContainStatus_OK() {
+        when(this.personService.getAdminToken(any(AccessDataPayload.class))).thenReturn(Optional.of("AdminToken"));
+
+        ResponseEntity<?> response = this.personController.getAdminToken(this.accessData);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    @Test
+    public void getAdminToken_shouldContainStatus_BAD_REQUEST() {
+        when(this.personService.getAdminToken(any(AccessDataPayload.class))).thenReturn(Optional.empty());
+
+        ResponseEntity<?> response = this.personController.getAdminToken(this.accessData);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+    }
+
 
     @Test
     void updatePersonPassword_shouldContainStatus_OK() {
-        when(personService.updatePersonPassword(anyString(), anyString())).thenReturn(true);
+        when(this.personService.updatePersonPassword(anyString(), anyString())).thenReturn(true);
 
-        ResponseEntity<?> response = personController.updatePersonPassword("token", "test123");
+        ResponseEntity<?> response = this.personController.updatePersonPassword(this.tokenWithPasswordPayload);
 
         assertThat(response.getStatusCodeValue(), is(HttpStatus.OK.value()));
     }
 
     @Test
     void updatePersonPassword_shouldContainStatus_BAD_REQUEST() {
-        when(personService.updatePersonPassword(anyString(), anyString())).thenReturn(false);
+        when(this.personService.updatePersonPassword(anyString(), anyString())).thenReturn(false);
 
-        ResponseEntity<?> response = personController.updatePersonPassword("token", "test123");
+        ResponseEntity<?> response = this.personController.updatePersonPassword(this.tokenWithPasswordPayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
     @Test
     void deletePerson_shouldContainStatus_OK() {
-        when(personService.deletePerson(anyString(),anyString())).thenReturn(true);
+        when(this.personService.deletePerson(anyString(),anyString())).thenReturn(true);
 
-        ResponseEntity<?> response = personController.deletePerson(" token", " pass");
+        ResponseEntity<?> response = this.personController.deletePerson(this.tokenWithPasswordPayload);
 
         assertThat(response.getStatusCodeValue(), is(HttpStatus.OK.value()));
     }
 
     @Test
     void deletePerson_shouldContainStatus_BAD_REQUEST() {
-        when(personService.deletePerson(anyString(),anyString())).thenReturn(false);
+        when(this.personService.deletePerson(anyString(),anyString())).thenReturn(false);
 
-        ResponseEntity<?> response = personController.deletePerson(" token", " pass");
+        ResponseEntity<?> response = this.personController.deletePerson(this.tokenWithPasswordPayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
@@ -84,51 +135,43 @@ public class PersonUnitTests {
 
     @Test
     void updateEmail_shouldContainStatus_OK() {
-        when(personService.updateEmail(anyString(), anyString())).thenReturn(true);
+        when(this.personService.updateEmail(anyString(), anyString())).thenReturn(true);
 
-        ResponseEntity<?> response = personController.updateEmail(" token", " new@email.pl");
+        ResponseEntity<?> response = this.personController.updateEmail(this.tokenWithEmailPayload);
 
         assertThat(response.getStatusCodeValue(), is(HttpStatus.OK.value()));
     }
 
     @Test
     void updateEmail_shouldContainStatus_BAD_REQUEST() {
-        when(personService.updateEmail(anyString(), anyString())).thenReturn(false);
+        when(this.personService.updateEmail(anyString(), anyString())).thenReturn(false);
 
-        ResponseEntity<?> response = personController.updateEmail(" token", " new@email.pl");
+        ResponseEntity<?> response = this.personController.updateEmail(this.tokenWithEmailPayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
     @Test
-    void updateRole() {
+    void updateRole_shouldContainStatus_OK() {
+        UpdateRolePayload updateRolePayload = new UpdateRolePayload("test@test.pl","adminToken",Role.ADMIN);
+        when(this.personService.updateRole(anyString(), anyString(),anyString(), any(Role.class))).thenReturn(true);
+        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("adminEmail");
+
+        ResponseEntity<?> response = personController.updateRole("adminEmail",updateRolePayload);
+
+        assertThat(response.getStatusCodeValue(), is(HttpStatus.OK.value()));
+    }
+    @Test
+    void updateRole_shouldContainStatus_BAD_REQUEST() {
+        UpdateRolePayload updateRolePayload = new UpdateRolePayload("test@test.pl","adminToken",Role.ADMIN);
+        when(personService.updateRole(anyString(), anyString(),anyString(), any(Role.class))).thenReturn(false);
+        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("adminEmail");
+
+        ResponseEntity<?> response = personController.updateRole("adminEmail",updateRolePayload);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
-
-//    @Test
-//    void getAllPerson() {
-//        List<Person> list =
-//                List.of(new Person("email1@onet.pl","haslo123"),
-//                        new Person("email2@onet.pl","haslo123"),
-//                        new Person("email3@onet.pl","haslo123"),
-//        PageRequest pageable = PageRequest.of(1, 5);
-//        Page<Person> page = new PageImpl<>(list, pageable, 5);
-//        when(personService.getAllPerson(pageable)).thenReturn(page);
-//
-//        Page<Person> pageWithProjects = personController.getAllPerson(pageable);
-//
-//        assertNotNull(pageWithProjects);
-//        List<Person> persons = pageWithProjects.getContent();
-//        assertNotNull(persons);
-//        assertThat(persons, hasSize(3));
-//        assertAll(() -> assertTrue(persons.contains(list.get(0))),
-//                () -> assertTrue(persons.contains(list.get(1))),
-//                () -> assertTrue(persons.contains(list.get(2))));
-//
-
-    // }
-
-    */
 
 
 }
