@@ -1,10 +1,12 @@
 package pl.project.ProjectManagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.project.ProjectManagement.model.Task;
 import pl.project.ProjectManagement.model.dto.TaskDto;
 import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
@@ -45,10 +47,10 @@ public class TaskController {
     public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization,
                                              @PathVariable long projectId,
                                              Pageable pageable) {
+       Page<Task> taskDtoList = this.taskService
+                .getProjectTasks(this.infoService.getEmailFromJwt(authorization), projectId, pageable);
 
-        return ResponseEntity.ok(this.taskService
-                .getProjectTasks(this.infoService.getEmailFromJwt(authorization), projectId, pageable)
-                .stream().map(TaskDto::new).toList());
+        return ResponseEntity.ok(new PageImpl<>(taskDtoList.stream().map(TaskDto::new).toList(), pageable, taskDtoList.getTotalElements()));
     }
 
     @GetMapping("/all/{token}")
