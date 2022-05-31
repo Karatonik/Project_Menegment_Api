@@ -50,10 +50,8 @@ public class TaskController {
                 .getProjectTasks(this.infoService.getEmailFromJwt(authorization), projectId)
                 .stream().map(TaskDto::new).toList();
 
-        int start = (int) pageable.getOffset()*pageable.getPageSize() ;
-        start = Math.min(start, tasks.size()-1);
-        int end = Math.min((start + pageable.getPageSize()), pageable.getPageSize());
-        end = Math.min(end, tasks.size()-1);
+        int start = Math.min((int) pageable.getOffset()*pageable.getPageSize(), tasks.size()-1 );
+        int end = start + pageable.getPageSize();
 
         return ResponseEntity.ok(new PageImpl<>(tasks.subList(start,end), pageable, tasks.size()));
     }
