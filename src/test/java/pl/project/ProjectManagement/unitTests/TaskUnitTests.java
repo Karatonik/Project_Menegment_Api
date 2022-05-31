@@ -73,9 +73,8 @@ public class TaskUnitTests {
         when(this.taskService.getProjectTasks(anyString(), any())).thenReturn(new ArrayList<>());
         long projectId = 1;
         Pageable pageable = PageRequest.of(0, 12);
-        int size = 10;
 
-        ResponseEntity<?> response = taskController.getProjectTasks("test@test.pl", projectId, pageable, size);
+        ResponseEntity<?> response = taskController.getProjectTasks("test@test.pl", projectId, pageable);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }

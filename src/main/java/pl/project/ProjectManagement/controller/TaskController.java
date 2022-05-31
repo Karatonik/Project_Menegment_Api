@@ -45,11 +45,11 @@ public class TaskController {
     @GetMapping("/project/{projectId}")
     public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization,
                                              @PathVariable long projectId,
-                                             Pageable pageable, long size) {
+                                             Pageable pageable) {
 
         return ResponseEntity.ok(new PageImpl<>(this.taskService
                 .getProjectTasks(this.infoService.getEmailFromJwt(authorization), projectId)
-                .stream().map(TaskDto::new).collect(Collectors.toList()), pageable, size));
+                .stream().map(TaskDto::new).collect(Collectors.toList()), pageable, pageable.getPageSize()));
     }
 
     @GetMapping("/all/{token}")
