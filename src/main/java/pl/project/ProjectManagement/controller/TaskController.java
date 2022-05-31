@@ -5,10 +5,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.project.ProjectManagement.model.Task;
 import pl.project.ProjectManagement.model.dto.TaskDto;
-import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
-import pl.project.ProjectManagement.model.response.SmartResponseEntity;
 import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.TaskService;
@@ -43,7 +40,7 @@ public class TaskController {
     public ResponseEntity<?> getTask(@PathVariable long taskId) {
         return ResponseEntity.ok(new TaskDto(this.taskService.getTask(taskId)));
     }
-
+//todo
     @GetMapping("/project/{projectId}/{pageable}")
     public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization,
                                              @PathVariable long projectId,
@@ -53,6 +50,7 @@ public class TaskController {
                 .getProjectTasks(this.infoService.getEmailFromJwt(authorization), projectId)
                 .stream().map(TaskDto::new).toList();
         System.out.println(task);
+
 
         return ResponseEntity.ok(new PageImpl<>(task, pageable, pageable.getPageSize()));
     }
