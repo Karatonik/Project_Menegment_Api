@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.project.ProjectManagement.model.Task;
 import pl.project.ProjectManagement.model.dto.TaskDto;
 import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
 import pl.project.ProjectManagement.model.response.SmartResponseEntity;
@@ -13,6 +14,7 @@ import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.TaskService;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -46,10 +48,13 @@ public class TaskController {
     public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization,
                                              @PathVariable long projectId,
                                              @PathVariable Pageable pageable) {
-
-        return ResponseEntity.ok(new PageImpl<>(this.taskService
+        System.out.println(pageable);
+        List<TaskDto> task = this.taskService
                 .getProjectTasks(this.infoService.getEmailFromJwt(authorization), projectId)
-                .stream().map(TaskDto::new).collect(Collectors.toList()), pageable, pageable.getPageSize()));
+                .stream().map(TaskDto::new).toList();
+        System.out.println(task);
+
+        return ResponseEntity.ok(new PageImpl<>(task, pageable, pageable.getPageSize()));
     }
 
     @GetMapping("/all/{token}")
