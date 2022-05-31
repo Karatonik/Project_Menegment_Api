@@ -49,8 +49,8 @@ public class TaskController {
                 .getProjectTasks(this.infoService.getEmailFromJwt(authorization), projectId)
                 .stream().map(TaskDto::new).toList();
 
-        int start =Math.min( pageable.getPageNumber()*pageable.getPageSize(),tasks.size()-1);
-        int end = Math.min(start + pageable.getPageSize(),tasks.size()-1);
+        int start =Math.min( pageable.getPageNumber()*pageable.getPageSize(),tasks.size());
+        int end = Math.min(start + pageable.getPageSize(),tasks.size());
         System.out.println(start);
         System.out.println(end);
 
