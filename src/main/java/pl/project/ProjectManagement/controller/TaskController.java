@@ -51,7 +51,7 @@ public class TaskController {
                 .stream().map(TaskDto::new).toList();
         long total = pageable.getOffset() + tasks.size() + (tasks.size() == pageable.getPageSize() ? pageable.getPageSize() : 0);
 
-        return ResponseEntity.ok(new PageImpl<>(tasks, pageable, total));
+        return ResponseEntity.ok(new PageImpl<TaskDto>(tasks, pageable, total));
     }
 
     @GetMapping("/all/{token}")
