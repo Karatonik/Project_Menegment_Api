@@ -41,10 +41,10 @@ public class TaskController {
         return ResponseEntity.ok(new TaskDto(this.taskService.getTask(taskId)));
     }
 //todo
-    @GetMapping("/project/{projectId}/{pageable}")
+    @GetMapping("/project/{projectId}")
     public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization,
                                              @PathVariable long projectId,
-                                             @PathVariable Pageable pageable) {
+                                             Pageable pageable) {
         System.out.println(pageable);
         List<TaskDto> task = this.taskService
                 .getProjectTasks(this.infoService.getEmailFromJwt(authorization), projectId)
