@@ -1,7 +1,6 @@
 package pl.project.ProjectManagement.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.Project;
@@ -14,7 +13,6 @@ import pl.project.ProjectManagement.repository.StudentRepository;
 import pl.project.ProjectManagement.repository.TaskRepository;
 import pl.project.ProjectManagement.service.interfaces.TaskService;
 
-import org.springframework.data.domain.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,24 +46,25 @@ public class TaskServiceImp implements TaskService {
     }
 
     @Override
-    public Page<Task> getProjectTasks(String email, Long projectId , Pageable pageable) {
+    public List<Task> getProjectTasks(String email, Long projectId) {
         Optional<Project> optionalProject = projectRepository.findById(projectId);
         if (optionalProject.isPresent()) {
             Project project = optionalProject.get();
             if (project.getProjectOwner().getEmail().equals(email)) {
-                return taskRepository.getTasksByProject(project,pageable);
+                return project.getTasks();
             } else {
                 Optional<Student> optionalStudent = studentRepository.findById(email);
                 if (optionalStudent.isPresent()) {
                     if (project.getStudents().contains(optionalStudent.get())) {
-                        return taskRepository.getTasksByProject(project,pageable);
+                        return project.getTasks();
                     }
 
                 }
             }
         }
-        return  Page.empty();
+        return new ArrayList<>();
     }
+
 
     @Override
     public List<Task> getTasks(String adminEmail, String token) {
