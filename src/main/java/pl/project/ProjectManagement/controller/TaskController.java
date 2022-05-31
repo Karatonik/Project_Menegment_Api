@@ -13,7 +13,6 @@ import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.TaskService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/task")
@@ -44,23 +43,23 @@ public class TaskController {
 
     //todo
     @GetMapping("/project/{projectId}")
-    public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization,
-                                             @PathVariable long projectId,
-                                             Pageable pageable) {
-       Page<Task> taskDtoList = this.taskService
-                .getProjectTasks(this.infoService.getEmailFromJwt(authorization), projectId, pageable);
+    public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization
+            , @PathVariable long projectId, Pageable pageable) {
+        Page<Task> taskPage = this.taskService.getProjectTasks(this.infoService
+                .getEmailFromJwt(authorization), projectId, pageable);
 
-        return ResponseEntity.ok(new PageImpl<>(taskDtoList.stream().map(TaskDto::new).toList(), pageable, taskDtoList.getTotalElements()));
+        return ResponseEntity.ok(new PageImpl<>(taskPage.stream().map(TaskDto::new).toList()
+                , pageable, taskPage.getTotalElements()));
     }
 
     @GetMapping("/all/{token}")
-    public ResponseEntity<?> getTasks(@RequestHeader("Authorization") String authorization,
-                                      @PathVariable String token, Pageable pageable) {
+    public ResponseEntity<?> getTasks(@RequestHeader("Authorization") String authorization
+            , @PathVariable String token, Pageable pageable) {
 
-        List<TaskDto> taskDtoList = this.taskService
-                .getTasks(this.infoService.getEmailFromJwt(authorization), token, pageable)
-                .stream().map(TaskDto::new).toList();
+        Page<Task> taskPage = this.taskService.getTasks(this.infoService
+                .getEmailFromJwt(authorization), token, pageable);
 
-        return ResponseEntity.ok(new PageImpl<>(taskDtoList, pageable, taskDtoList.size()));
+        return ResponseEntity.ok(new PageImpl<>(taskPage.stream()
+                .map(TaskDto::new).toList(), pageable, taskPage.getTotalElements()));
     }
 }

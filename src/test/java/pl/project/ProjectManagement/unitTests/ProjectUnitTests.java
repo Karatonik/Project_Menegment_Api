@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -37,9 +38,9 @@ import static org.mockito.Mockito.when;
 public class ProjectUnitTests {
 
     private final Person person = new Person("test@test.pl", "password123");
-    private final Project project = new Project("TEST", "OPIS", LocalDateTime.now(),
-            LocalDateTime.now(), LocalDate.of(2021, 6, 7), new ArrayList<>(),
-            new ArrayList<>(), person);
+    private final Project project = new Project("TEST"
+            , "OPIS", LocalDateTime.now(), LocalDateTime.now()
+            , LocalDate.of(2021, 6, 7), new ArrayList<>(), new ArrayList<>(), person);
     private final ProjectDto dto = new ProjectDto(project);
     @Mock
     ProjectService projectService;
@@ -67,7 +68,8 @@ public class ProjectUnitTests {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
         when(projectService.updateProjectDescription(anyString(), anyLong(), anyString())).thenReturn(true);
 
-        ResponseEntity<?> response = projectController.updateProjectDescription("test@test.pl", descriptionPayload);
+        ResponseEntity<?> response = projectController.updateProjectDescription("test@test.pl"
+                , descriptionPayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
@@ -78,7 +80,8 @@ public class ProjectUnitTests {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
         when(projectService.updateProjectDescription(anyString(), anyLong(), anyString())).thenReturn(false);
 
-        ResponseEntity<?> response = projectController.updateProjectDescription("test@test.pl", descriptionPayload);
+        ResponseEntity<?> response = projectController.updateProjectDescription("test@test.pl"
+                , descriptionPayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
@@ -90,7 +93,8 @@ public class ProjectUnitTests {
         when(projectService.updateProjectName(anyString(), anyLong(), anyString())).thenReturn(true);
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
 
-        ResponseEntity<?> response = projectController.updateProjectName("test@test.pl", projectNamePayload);
+        ResponseEntity<?> response = projectController.updateProjectName("test@test.pl"
+                , projectNamePayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
@@ -118,13 +122,11 @@ public class ProjectUnitTests {
 
     @Test
     public void getProjects_OK() {
-        when(projectService.getProjects(anyString())).thenReturn(new ArrayList<>());
+        when(projectService.getProjects(anyString(), any(Pageable.class))).thenReturn(Page.empty());
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
         Pageable pageable = PageRequest.of(0, 12);
-        int size = 10;
 
-
-        ResponseEntity<?> response = projectController.getProjects("test@test.pl", pageable, size);
+        ResponseEntity<?> response = projectController.getProjects("test@test.pl", pageable);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
@@ -157,7 +159,8 @@ public class ProjectUnitTests {
         ProjectAccessPayload projectAccessPayload = new ProjectAccessPayload(1L, AccessType.OPEN);
         when(projectService.updateProjectAccess(anyString(), anyLong(), any())).thenReturn(true);
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        ResponseEntity<?> response = projectController.updateProjectAccess("testowy@edu.pl", projectAccessPayload);
+        ResponseEntity<?> response = projectController.updateProjectAccess("testowy@edu.pl"
+                , projectAccessPayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
@@ -167,7 +170,8 @@ public class ProjectUnitTests {
         ProjectAccessPayload projectAccessPayload = new ProjectAccessPayload(1L, AccessType.OPEN);
         when(projectService.updateProjectAccess(anyString(), anyLong(), any())).thenReturn(false);
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        ResponseEntity<?> response = projectController.updateProjectAccess("testowy@@.pl", projectAccessPayload);
+        ResponseEntity<?> response = projectController.updateProjectAccess("testowy@@.pl"
+                , projectAccessPayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
@@ -178,7 +182,8 @@ public class ProjectUnitTests {
         when(projectService.updateProjectStatus(anyString(), anyLong(), any())).thenReturn(true);
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
 
-        ResponseEntity<?> response = projectController.updateProjectStatus("nowy@eu.ep", projectStatusPayload);
+        ResponseEntity<?> response = projectController.updateProjectStatus("nowy@eu.ep"
+                , projectStatusPayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
@@ -189,7 +194,8 @@ public class ProjectUnitTests {
         when(projectService.updateProjectStatus(anyString(), anyLong(), any())).thenReturn(false);
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
 
-        ResponseEntity<?> response = projectController.updateProjectStatus("nowy@eu.epsss", projectStatusPayload);
+        ResponseEntity<?> response = projectController.updateProjectStatus("nowy@eu.epsss"
+                , projectStatusPayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }

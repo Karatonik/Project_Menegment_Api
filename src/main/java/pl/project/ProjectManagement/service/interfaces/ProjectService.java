@@ -1,10 +1,10 @@
 package pl.project.ProjectManagement.service.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.project.ProjectManagement.model.Project;
 import pl.project.ProjectManagement.model.enums.AccessType;
 import pl.project.ProjectManagement.model.enums.StatusType;
-
-import java.util.List;
 
 public interface ProjectService {
 
@@ -16,7 +16,7 @@ public interface ProjectService {
 
     Project getProject(Long projectId);
 
-    List<Project> getProjects(String email);
+    Page<Project> getProjects(String email, Pageable pageable);
 
     boolean deleteProject(String email, Long projectId);
 

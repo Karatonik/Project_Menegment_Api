@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -32,10 +33,16 @@ import static pl.project.ProjectManagement.model.enums.StudyType.STATIONARY;
 @ExtendWith(MockitoExtension.class)
 public class TaskResultUnitTests {
     private final Person person = new Person("test@test.pl", "password123");
-    private final Student student = new Student("test@test.pl", "Jan", "Kowalski", "11111", STATIONARY, Collections.emptySet(), new ArrayList<>(), this.person);
-    private final Project project = new Project(1L, "Test", "Opis", LocalDateTime.now(), AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now(), LocalDate.now(), this.person, new ArrayList<>(), new ArrayList<>());
-    private final Task task = new Task(1L, "Test", 1, "Opis", LocalDateTime.now(), this.project, new ArrayList<>());
-    private final TaskResult taskResult = new TaskResult(1L, this.student, this.task, "file.pdf", LocalDateTime.now());
+    private final Student student = new Student("test@test.pl", "Jan"
+            , "Kowalski", "11111", STATIONARY, Collections.emptySet()
+            , new ArrayList<>(), this.person);
+    private final Project project = new Project(1L, "Test", "Opis"
+            , LocalDateTime.now(), AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now()
+            , LocalDate.now(), this.person, new ArrayList<>(), new ArrayList<>());
+    private final Task task = new Task(1L, "Test", 1, "Opis"
+            , LocalDateTime.now(), this.project, new ArrayList<>());
+    private final TaskResult taskResult = new TaskResult(1L, this.student, this.task
+            , "file.pdf", LocalDateTime.now());
     private final TaskResultDto dto = new TaskResultDto(this.taskResult);
     @Mock
     TaskResultService taskResultService;
@@ -70,13 +77,14 @@ public class TaskResultUnitTests {
     @Test
     public void getTaskResultsByTask_OK() {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString(), any(Pageable.class))).thenReturn(new ArrayList<>());
+        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString(), any(Pageable.class)))
+                .thenReturn(Page.empty());
 
         long taskId = 1;
         Pageable pageable = PageRequest.of(0, 12);
-        int size = 10;
 
-        ResponseEntity<?> response = taskResultController.getTaskResultsByTask("test@test.pl", taskId, pageable);
+        ResponseEntity<?> response = taskResultController.getTaskResultsByTask("test@test.pl"
+                , taskId, pageable);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }

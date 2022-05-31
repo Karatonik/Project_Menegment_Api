@@ -15,7 +15,6 @@ import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.StudentService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -50,9 +49,13 @@ public class StudentController {
     public ResponseEntity<?> getAllStudents(@RequestHeader("Authorization") String authorization,
                                             @PathVariable String token,
                                             Pageable pageable) {
-        return ResponseEntity.ok(this.studentService.
-                getAllStudents(this.infoService.getEmailFromJwt(authorization), token, pageable)
-                .stream().map(StudentDto::new).toList());
+
+        Page<Student> studentPage = this.studentService.
+                getAllStudents(this.infoService.getEmailFromJwt(authorization), token, pageable);
+
+
+        return ResponseEntity.ok(new PageImpl<>(studentPage.stream().map(StudentDto::new).toList()
+                , pageable, studentPage.getTotalElements()));
     }
 
     @PutMapping("/type")

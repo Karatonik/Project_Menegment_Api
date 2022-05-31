@@ -2,10 +2,12 @@ package pl.project.ProjectManagement.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.enums.MailRole;
 import pl.project.ProjectManagement.model.request.*;
 import pl.project.ProjectManagement.model.request.Parent.TokenPayload;
@@ -51,31 +53,44 @@ public class PersonController {
 
     @PutMapping("/pass")
     public ResponseEntity<?> updatePersonPassword(@RequestBody TokenWithPasswordPayload payload) {
-        return SmartResponseEntity.fromBoolean(this.personService.updatePersonPassword(payload.getToken(), payload.getPassword()));
+        return SmartResponseEntity.fromBoolean(this.personService
+                .updatePersonPassword(payload.getToken(), payload.getPassword()));
     }
 
     @DeleteMapping
     public ResponseEntity<?> deletePerson(@Valid @RequestBody TokenWithPasswordPayload payload) {
-        return SmartResponseEntity.fromBoolean(this.personService.deletePerson(payload.getToken(), payload.getPassword()));
+        return SmartResponseEntity.fromBoolean(this.personService
+                .deletePerson(payload.getToken(), payload.getPassword()));
     }
 
     @PutMapping("/email")
     public ResponseEntity<?> updateEmail(@Valid @RequestBody TokenWithEmailPayload payload) {
-        return SmartResponseEntity.fromBoolean(this.personService.updateEmail(payload.getToken(), payload.getEmail()));
+        return SmartResponseEntity.fromBoolean(this.personService
+                .updateEmail(payload.getToken(), payload.getEmail()));
     }
 
     @PutMapping("/role")
-    public ResponseEntity<?> updateRole(@RequestHeader("Authorization") String authorization, @RequestBody @Valid UpdateRolePayload payload) {
-        return SmartResponseEntity.fromBoolean(this.personService.updateRole(this.infoService.getEmailFromJwt(authorization), payload.getToken(), payload.getEmail(), payload.getRole()));
+    public ResponseEntity<?> updateRole(@RequestHeader("Authorization") String authorization
+            , @RequestBody @Valid UpdateRolePayload payload) {
+        return SmartResponseEntity.fromBoolean(this.personService.
+                updateRole(this.infoService.getEmailFromJwt(authorization), payload.getToken()
+                        , payload.getEmail(), payload.getRole()));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllPerson(@RequestHeader("Authorization") String authorization, @RequestBody @Valid TokenPayload payload, Pageable pageable, long size) {
-        return ResponseEntity.ok(new PageImpl<>(this.personService.getAllPerson(this.infoService.getEmailFromJwt(authorization), payload.getToken()), pageable, size));
+    public ResponseEntity<?> getAllPerson(@RequestHeader("Authorization") String authorization
+            , @RequestBody @Valid TokenPayload payload, Pageable pageable) {
+
+        Page<Person> personPage = this.personService.getAllPerson(this.infoService
+                .getEmailFromJwt(authorization), payload.getToken(), pageable);
+
+        return ResponseEntity.ok(personPage);
     }
 
     @PostMapping("/mail/{mailRole}")
-    public ResponseEntity<?> sendToken(@RequestHeader("Authorization") String authorization, @PathVariable MailRole mailRole) {
-        return SmartResponseEntity.fromBoolean(this.mailService.sendMail(new MailPayload(this.infoService.getEmailFromJwt(authorization), mailRole)));
+    public ResponseEntity<?> sendToken(@RequestHeader("Authorization") String authorization
+            , @PathVariable MailRole mailRole) {
+        return SmartResponseEntity.fromBoolean(this.mailService.sendMail(new MailPayload(this
+                .infoService.getEmailFromJwt(authorization), mailRole)));
     }
 }

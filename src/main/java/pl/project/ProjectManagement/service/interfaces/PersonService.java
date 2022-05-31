@@ -1,5 +1,7 @@
 package pl.project.ProjectManagement.service.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.enums.Role;
 import pl.project.ProjectManagement.model.request.AccessDataPayload;
@@ -22,7 +24,7 @@ public interface PersonService {
 
     boolean updateRole(String adminEmail, String adminToken, String email, Role role);
 
-    List<Person> getAllPerson(String adminEmail, String adminToken);
+    Page<Person> getAllPerson(String adminEmail, String adminToken, Pageable pageable);
 
     Optional<String> getAdminToken(AccessDataPayload emailAndPassword);
 }

@@ -75,7 +75,8 @@ public class StudentUnitTests {
         when(studentService.updateStudentType(anyString(), any())).thenReturn(true);
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
 
-        ResponseEntity<?> response = studentController.updateStudentType("test@test.pl", updateStudyTypePayload);
+        ResponseEntity<?> response = studentController.updateStudentType("test@test.pl"
+                , updateStudyTypePayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
@@ -86,7 +87,8 @@ public class StudentUnitTests {
         when(studentService.updateStudentType(anyString(), any())).thenReturn(false);
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
 
-        ResponseEntity<?> response = studentController.updateStudentType("test@test.pl", updateStudyTypePayload);
+        ResponseEntity<?> response = studentController.updateStudentType("test@test.pl"
+                , updateStudyTypePayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
 

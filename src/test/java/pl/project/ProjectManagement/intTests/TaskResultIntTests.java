@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -47,11 +48,15 @@ public class TaskResultIntTests {
     private final String path = "/res";
     private final Person person = new Person("test@test.pl", "password123");
     private final Student student = new Student("test@test.pl", "Jan",
-            "Kowalski", "11111", STATIONARY, Collections.emptySet(), new ArrayList<>(), this.person);
+            "Kowalski", "11111", STATIONARY, Collections.emptySet()
+            , new ArrayList<>(), this.person);
     private final Project project = new Project(1L, "Test", "Opis", LocalDateTime.now(),
-            AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now(), LocalDate.now(), this.person, new ArrayList<>(), new ArrayList<>());
-    private final Task task = new Task(1L, "Test", 1, "Opis", LocalDateTime.now(), this.project, new ArrayList<>());
-    private final TaskResult taskResult = new TaskResult(1L, this.student, this.task, "file.pdf", LocalDateTime.now());
+            AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now()
+            , LocalDate.now(), this.person, new ArrayList<>(), new ArrayList<>());
+    private final Task task = new Task(1L, "Test", 1
+            , "Opis", LocalDateTime.now(), this.project, new ArrayList<>());
+    private final TaskResult taskResult = new TaskResult(1L, this.student
+            , this.task, "file.pdf", LocalDateTime.now());
     private final TaskResultDto dto = new TaskResultDto(this.taskResult);
     @MockBean
     TaskResultService taskResultService;
@@ -111,7 +116,8 @@ public class TaskResultIntTests {
     @Test
     public void getTaskResultsByTask_OK() throws Exception {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString(), any(Pageable.class))).thenReturn(new ArrayList<>());
+        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString(), any(Pageable.class)))
+                .thenReturn(Page.empty());
         long taskId = 1;
         int page = 0;
         int size = 12;
@@ -126,7 +132,8 @@ public class TaskResultIntTests {
 
     @Test
     public void getTaskResultsByTask_withoutHeader_BadRequest() throws Exception {
-        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString(),any(Pageable.class))).thenReturn(new ArrayList<>());
+        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString()
+                ,any(Pageable.class))).thenReturn(Page.empty());
         long taskId = 1;
         int page = 0;
         int size = 12;

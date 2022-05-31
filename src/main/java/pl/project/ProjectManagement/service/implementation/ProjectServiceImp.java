@@ -1,6 +1,9 @@
 package pl.project.ProjectManagement.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.Project;
@@ -26,8 +29,7 @@ public class ProjectServiceImp implements ProjectService {
     private final PersonRepository personRepository;
 
     @Autowired
-    public ProjectServiceImp(ProjectRepository projectRepository,
-                             StudentRepository studentRepository, PersonRepository personRepository) {
+    public ProjectServiceImp(ProjectRepository projectRepository, StudentRepository studentRepository, PersonRepository personRepository) {
         this.projectRepository = projectRepository;
         this.studentRepository = studentRepository;
         this.personRepository = personRepository;
@@ -43,8 +45,7 @@ public class ProjectServiceImp implements ProjectService {
         Optional<Person> optionalPerson = personRepository.findById(email);
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();
-            Optional<Project> optionalProject = projectRepository
-                    .findByProjectIdAndProjectOwner(projectId, person);
+            Optional<Project> optionalProject = projectRepository.findByProjectIdAndProjectOwner(projectId, person);
             if (optionalProject.isPresent()) {
                 Project project = optionalProject.get();
                 project.setDescription(description);
@@ -60,8 +61,7 @@ public class ProjectServiceImp implements ProjectService {
         Optional<Person> optionalPerson = personRepository.findById(email);
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();
-            Optional<Project> optionalProject = projectRepository
-                    .findByProjectIdAndProjectOwner(projectId, person);
+            Optional<Project> optionalProject = projectRepository.findByProjectIdAndProjectOwner(projectId, person);
             if (optionalProject.isPresent()) {
                 Project project = optionalProject.get();
                 project.setName(name);
@@ -79,12 +79,12 @@ public class ProjectServiceImp implements ProjectService {
     }
 
     @Override
-    public List<Project> getProjects(String email) {
+    public Page<Project> getProjects(String email, Pageable pageable) {
         Optional<Person> optionalPerson = personRepository.findById(email);
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();
             if (person.getRole().equals(Role.ADMIN)) {
-                return projectRepository.findAll();
+                return projectRepository.findAll(pageable);
             } else {
                 Optional<Student> optionalStudent = studentRepository.findById(email);
                 List<Project> projectList = new ArrayList<>(person.getOwnedProjects());
@@ -93,18 +93,18 @@ public class ProjectServiceImp implements ProjectService {
                     projectList.addAll(student.getProjects());
                     projectList = new ArrayList<>(new HashSet<>(projectList));
                 }
-                return projectList;
+                return new PageImpl<>(projectList.subList(pageable.getPageNumber() * pageable.getPageSize(),
+                        (pageable.getPageNumber() + 1) * pageable.getPageSize()), pageable, projectList.size());
             }
         }
-        return new ArrayList<>();
+        return Page.empty();
     }
 
     @Override
     public boolean deleteProject(String email, Long projectId) {
         Optional<Person> optionalPerson = personRepository.findById(email);
         if (optionalPerson.isPresent()) {
-            Optional<Project> optionalProject = projectRepository
-                    .findByProjectIdAndProjectOwner(projectId, optionalPerson.get());
+            Optional<Project> optionalProject = projectRepository.findByProjectIdAndProjectOwner(projectId, optionalPerson.get());
             if (optionalProject.isPresent()) {
                 projectRepository.delete(optionalProject.get());
                 return true;
@@ -118,8 +118,7 @@ public class ProjectServiceImp implements ProjectService {
     public boolean updateProjectAccess(String email, Long projectId, AccessType access) {
         Optional<Person> optionalPerson = personRepository.findById(email);
         if (optionalPerson.isPresent()) {
-            Optional<Project> optionalProject = projectRepository
-                    .findByProjectIdAndProjectOwner(projectId, optionalPerson.get());
+            Optional<Project> optionalProject = projectRepository.findByProjectIdAndProjectOwner(projectId, optionalPerson.get());
             if (optionalProject.isPresent()) {
                 Project project = optionalProject.get();
                 project.setAccess(access);
@@ -134,8 +133,7 @@ public class ProjectServiceImp implements ProjectService {
     public boolean updateProjectStatus(String email, Long projectId, StatusType status) {
         Optional<Person> optionalPerson = personRepository.findById(email);
         if (optionalPerson.isPresent()) {
-            Optional<Project> optionalProject = projectRepository
-                    .findByProjectIdAndProjectOwner(projectId, optionalPerson.get());
+            Optional<Project> optionalProject = projectRepository.findByProjectIdAndProjectOwner(projectId, optionalPerson.get());
             if (optionalProject.isPresent()) {
                 Project project = optionalProject.get();
                 project.setStatus(status);

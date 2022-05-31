@@ -1,6 +1,8 @@
 package pl.project.ProjectManagement.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -122,12 +124,12 @@ public class PersonServiceImp implements PersonService {
     }
 
     @Override
-    public List<Person> getAllPerson(String adminEmail, String adminToken) {
+    public Page<Person> getAllPerson(String adminEmail, String adminToken, Pageable pageable) {
         Optional<Person> optionalAdmin = this.personRepository.findByEmailAndToken(adminEmail, adminToken);
         if (optionalAdmin.isPresent()) {
-            return personRepository.findAll();
+            return personRepository.findAll(pageable);
         }
-        return new ArrayList<>();
+        return Page.empty();
     }
 
     @Override

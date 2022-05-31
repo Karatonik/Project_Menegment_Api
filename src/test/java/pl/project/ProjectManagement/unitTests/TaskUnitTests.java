@@ -34,8 +34,11 @@ import static org.mockito.Mockito.when;
 public class TaskUnitTests {
 
     private final Person person = new Person("test@test.pl", "password123");
-    private final Project project = new Project(1L, "Test", "Opis", LocalDateTime.now(), AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now(), LocalDate.now(), this.person, new ArrayList<>(), new ArrayList<>());
-    private final Task task = new Task(1L, "Test", 1, "Opis", LocalDateTime.now(), this.project, new ArrayList<>());
+    private final Project project = new Project(1L, "Test", "Opis"
+            , LocalDateTime.now(), AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now()
+            , LocalDate.now(), this.person, new ArrayList<>(), new ArrayList<>());
+    private final Task task = new Task(1L, "Test", 1, "Opis"
+            , LocalDateTime.now(), this.project, new ArrayList<>());
     private final TaskDto dto = new TaskDto(this.task);
     @Mock
     TaskService taskService;

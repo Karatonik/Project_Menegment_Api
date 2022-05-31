@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -49,8 +51,9 @@ public class ProjectIntTests {
     private final String path = "/project";
     private final Person person = new Person("test@test.pl", "password123");
 
-    private final Project project = new Project(1L, "Test", "Opis", LocalDateTime.now(),
-            AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now(), LocalDate.now(), person, new ArrayList<>(), new ArrayList<>());
+    private final Project project = new Project(1L, "Test", "Opis"
+            , LocalDateTime.now(), AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now()
+            , LocalDate.now(), person, new ArrayList<>(), new ArrayList<>());
     private final ProjectDto dto = new ProjectDto(project);
     @MockBean
     ProjectService projectService;
@@ -74,10 +77,9 @@ public class ProjectIntTests {
         String requestJson = ow.writeValueAsString(this.project);
 
         this.mvc.perform(post(this.path).content(requestJson)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Test")));
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)).andDo(print()).andExpect(status()
+                .isOk()).andExpect(content().string(containsString("Test")));
 
     }
 
@@ -92,12 +94,11 @@ public class ProjectIntTests {
         ObjectWriter ow = mapper.writer().withoutRootName();
         String requestJson = ow.writeValueAsString(descriptionPayload);
 
-        this.mvc.perform(put(String.format("%s/des", this.path)).content(requestJson)
-                        .header("Authorization", "Token")
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("OK")));
+        this.mvc.perform(put(String.format("%s/des", this.path))
+                .content(requestJson).header("Authorization", "Token")
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content()
+                        .string(containsString("OK")));
     }
 
     @Test
@@ -111,10 +112,9 @@ public class ProjectIntTests {
         ObjectWriter ow = mapper.writer().withoutRootName();
         String requestJson = ow.writeValueAsString(descriptionPayload);
 
-        mvc.perform(put(String.format("%s/des", this.path)).content(requestJson)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+        mvc.perform(put(String.format("%s/des", this.path))
+                .content(requestJson).contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)).andDo(print()).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -128,12 +128,10 @@ public class ProjectIntTests {
         ObjectWriter ow = mapper.writer().withoutRootName();
         String requestJson = ow.writeValueAsString(descriptionPayload);
 
-        mvc.perform(put(String.format("%s/des", this.path)).content(requestJson)
-                        .header("Authorization", "Token")
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("BAD_REQUEST")));
+        mvc.perform(put(String.format("%s/des", this.path))
+                .content(requestJson).header("Authorization", "Token")
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL)).andDo(print())
+                .andExpect(status().isBadRequest()).andExpect(content().string(containsString("BAD_REQUEST")));
     }
 
 
@@ -149,12 +147,10 @@ public class ProjectIntTests {
         ObjectWriter ow = mapper.writer().withoutRootName();
         String requestJson = ow.writeValueAsString(projectNamePayload);
 
-        mvc.perform(put(String.format("%s/name", this.path)).content(requestJson)
-                        .header("Authorization", "Token")
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("OK")));
+        mvc.perform(put(String.format("%s/name", this.path))
+                .content(requestJson).header("Authorization", "Token")
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL)).andDo(print())
+                .andExpect(status().isOk()).andExpect(content().string(containsString("OK")));
     }
 
     @Test
@@ -169,10 +165,9 @@ public class ProjectIntTests {
         ObjectWriter ow = mapper.writer().withoutRootName();
         String requestJson = ow.writeValueAsString(projectNamePayload);
 
-        mvc.perform(put(String.format("%s/name", this.path)).content(requestJson)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+        mvc.perform(put(String.format("%s/name", this.path))
+                .content(requestJson).contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)).andDo(print()).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -187,12 +182,10 @@ public class ProjectIntTests {
         ObjectWriter ow = mapper.writer().withoutRootName();
         String requestJson = ow.writeValueAsString(projectNamePayload);
 
-        this.mvc.perform(put(String.format("%s/name", this.path)).content(requestJson)
-                        .header("Authorization", "Token")
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("BAD_REQUEST")));
+        this.mvc.perform(put(String.format("%s/name", this.path))
+                .content(requestJson).header("Authorization", "Token")
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL)).andDo(print())
+                .andExpect(status().isBadRequest()).andExpect(content().string(containsString("BAD_REQUEST")));
     }
 
 
@@ -201,41 +194,37 @@ public class ProjectIntTests {
         when(this.projectService.getProject(anyLong())).thenReturn(this.project);
 
         this.mvc.perform(get(String.format("%s/project/%d", this.path, 1L))
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Test")));
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content()
+                        .string(containsString("Test")));
     }
 
 
     @Test
     public void getProjects_OK() throws Exception {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(this.projectService.getProjects(anyString())).thenReturn(new ArrayList<>());
+        when(this.projectService.getProjects(anyString(), any(Pageable.class))).thenReturn(Page.empty());
 
         int page = 0;
         int size = 12;
         String sort = "asc";
 
         this.mvc.perform(get(String.format("%s/list?page=%d&size=%d&sort=%s", this.path, page, size, sort))
-                        .header("Authorization", "Token")
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isOk());
+                .header("Authorization", "Token").contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)).andDo(print()).andExpect(status().isOk());
     }
 
     @Test
     public void getProjects_withoutHeader_BadRequest() throws Exception {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(projectService.getProjects(anyString())).thenReturn(new ArrayList<>());
+        when(projectService.getProjects(anyString(), any(Pageable.class))).thenReturn(Page.empty());
 
         int page = 0;
         int size = 12;
         String sort = "asc";
 
         this.mvc.perform(get(String.format("%s/list?page=%d&size=%d&sort=%s", this.path, page, size, sort))
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL)).andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -251,11 +240,9 @@ public class ProjectIntTests {
         String requestJson = ow.writeValueAsString(projectPayload);
 
         this.mvc.perform(delete(String.format("%s/", this.path)).content(requestJson)
-                        .header("Authorization", "Token")
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("OK")));
+                .header("Authorization", "Token").contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)).andDo(print()).andExpect(status().isOk()).andExpect(content()
+                .string(containsString("OK")));
     }
 
     @Test
@@ -270,8 +257,7 @@ public class ProjectIntTests {
         String requestJson = ow.writeValueAsString(projectPayload);
 
         this.mvc.perform(delete(String.format("%s/", this.path)).content(requestJson)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL)).andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -287,10 +273,8 @@ public class ProjectIntTests {
         String requestJson = ow.writeValueAsString(projectPayload);
 
         this.mvc.perform(delete(String.format("%s/", this.path)).content(requestJson)
-                        .header("Authorization", "Token")
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
+                .header("Authorization", "Token").contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)).andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("BAD_REQUEST")));
     }
 
@@ -306,13 +290,13 @@ public class ProjectIntTests {
         ObjectWriter ow = mapper.writer().withoutRootName();
         String requestJson = ow.writeValueAsString(projectAccessPayload);
 
-        this.mvc.perform(put(String.format("%s/access", this.path)).content(requestJson)
-                        .header("Authorization", "Token")
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("OK")));
+        this.mvc.perform(put(String.format("%s/access", this.path))
+                .content(requestJson).header("Authorization", "Token")
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content()
+                        .string(containsString("OK")));
     }
+
     @Test
     public void updateProjectAccess_BadRequest() throws Exception {
         ProjectAccessPayload projectAccessPayload = new ProjectAccessPayload(1L, AccessType.OPEN);
@@ -325,12 +309,10 @@ public class ProjectIntTests {
         ObjectWriter ow = mapper.writer().withoutRootName();
         String requestJson = ow.writeValueAsString(projectAccessPayload);
 
-        this.mvc.perform(put(String.format("%s/access", this.path)).content(requestJson)
-                        .header("Authorization", "Token")
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("BAD_REQUEST")));
+        this.mvc.perform(put(String.format("%s/access", this.path))
+                .content(requestJson).header("Authorization", "Token")
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL)).andDo(print())
+                .andExpect(status().isBadRequest()).andExpect(content().string(containsString("BAD_REQUEST")));
     }
 
     @Test
@@ -345,10 +327,9 @@ public class ProjectIntTests {
         ObjectWriter ow = mapper.writer().withoutRootName();
         String requestJson = ow.writeValueAsString(projectAccessPayload);
 
-        this.mvc.perform(put(String.format("%s/access", this.path)).content(requestJson)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+        this.mvc.perform(put(String.format("%s/access", this.path))
+                .content(requestJson).contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)).andDo(print()).andExpect(status().isBadRequest());
     }
 
 
@@ -363,12 +344,10 @@ public class ProjectIntTests {
         ObjectWriter ow = mapper.writer().withoutRootName();
         String requestJson = ow.writeValueAsString(projectStatusPayload);
 
-        mvc.perform(put(String.format("%s/status", this.path)).content(requestJson)
-                        .header("Authorization", "Token")
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("OK")));
+        mvc.perform(put(String.format("%s/status", this.path))
+                .content(requestJson).header("Authorization", "Token")
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL)).andDo(print())
+                .andExpect(status().isOk()).andExpect(content().string(containsString("OK")));
     }
 
     @Test
@@ -383,10 +362,8 @@ public class ProjectIntTests {
         String requestJson = ow.writeValueAsString(projectStatusPayload);
 
         mvc.perform(put(String.format("%s/status", this.path)).content(requestJson)
-                        .header("Authorization", "Token")
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
+                .header("Authorization", "Token").contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)).andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("BAD_REQUEST")));
     }
 
@@ -400,10 +377,9 @@ public class ProjectIntTests {
         ObjectWriter ow = mapper.writer().withoutRootName();
         String requestJson = ow.writeValueAsString(projectAccessPayload);
 
-        mvc.perform(put(String.format("%s/status", this.path)).content(requestJson)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+        mvc.perform(put(String.format("%s/status", this.path))
+                .content(requestJson).contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.ALL)).andDo(print()).andExpect(status().isBadRequest());
     }
 
 
