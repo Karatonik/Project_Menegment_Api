@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -125,7 +126,7 @@ public class TaskIntTests {
     @Test
     public void getTasks_OK() throws Exception {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(this.taskService.getTasks(anyString(), any())).thenReturn(new ArrayList<>());
+        when(this.taskService.getTasks(anyString(), any(), any(Pageable.class))).thenReturn(Page.empty());
 
         String token = "token";
         int page = 0;
@@ -141,7 +142,7 @@ public class TaskIntTests {
 
     @Test
     public void getTasks_withoutHeader_BadRequest() throws Exception {
-        when(this.taskService.getTasks(anyString(), any())).thenReturn(new ArrayList<>());
+        when(this.taskService.getTasks(anyString(), any(), any(Pageable.class))).thenReturn(Page.empty());
 
         String token = "token";
         int page = 0;

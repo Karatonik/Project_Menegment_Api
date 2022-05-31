@@ -70,13 +70,13 @@ public class TaskResultUnitTests {
     @Test
     public void getTaskResultsByTask_OK() {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString())).thenReturn(new ArrayList<>());
+        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString(), any(Pageable.class))).thenReturn(new ArrayList<>());
 
         long taskId = 1;
         Pageable pageable = PageRequest.of(0, 12);
         int size = 10;
 
-        ResponseEntity<?> response = taskResultController.getTaskResultsByTask("test@test.pl", taskId, pageable, size);
+        ResponseEntity<?> response = taskResultController.getTaskResultsByTask("test@test.pl", taskId, pageable);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -110,7 +111,7 @@ public class TaskResultIntTests {
     @Test
     public void getTaskResultsByTask_OK() throws Exception {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString())).thenReturn(new ArrayList<>());
+        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString(), any(Pageable.class))).thenReturn(new ArrayList<>());
         long taskId = 1;
         int page = 0;
         int size = 12;
@@ -125,7 +126,7 @@ public class TaskResultIntTests {
 
     @Test
     public void getTaskResultsByTask_withoutHeader_BadRequest() throws Exception {
-        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString())).thenReturn(new ArrayList<>());
+        when(this.taskResultService.getTaskResultsByTask(anyLong(), anyString(),any(Pageable.class))).thenReturn(new ArrayList<>());
         long taskId = 1;
         int page = 0;
         int size = 12;

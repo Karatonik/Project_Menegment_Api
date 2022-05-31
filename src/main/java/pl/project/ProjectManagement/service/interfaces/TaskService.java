@@ -1,5 +1,6 @@
 package pl.project.ProjectManagement.service.interfaces;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import pl.project.ProjectManagement.model.Task;
 
@@ -13,5 +14,5 @@ public interface TaskService {
 
     List<Task> getProjectTasks(String email, Long projectId, Pageable pageable);
 
-    List<Task> getTasks(String adminEmail, String token);
+    Page<Task> getTasks(String adminEmail, String token, Pageable pageable);
 }

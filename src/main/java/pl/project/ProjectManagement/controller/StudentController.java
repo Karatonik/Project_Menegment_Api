@@ -13,7 +13,7 @@ import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.StudentService;
 
 import javax.validation.Valid;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -37,20 +37,20 @@ public class StudentController {
         return ResponseEntity.ok(new StudentDto(this.studentService.
                 setStudent(this.modelWrapper.getStudentFromDto(studentDto))));
     }
+
     @GetMapping
     public ResponseEntity<?> getStudent(@RequestHeader("Authorization") String authorization) {
-       return ResponseEntity.ok( new StudentDto(this.studentService.getStudent(this.infoService
+        return ResponseEntity.ok(new StudentDto(this.studentService.getStudent(this.infoService
                 .getEmailFromJwt(authorization))));
     }
 
     @GetMapping("/all/{token}")
     public ResponseEntity<?> getAllStudents(@RequestHeader("Authorization") String authorization,
                                             @PathVariable String token,
-                                            Pageable pageable, long size) {
-
-        return ResponseEntity.ok(new PageImpl<>(this.studentService.
-                getAllStudents(this.infoService.getEmailFromJwt(authorization), token)
-                .stream().map(StudentDto::new).collect(Collectors.toList()), pageable, size));
+                                            Pageable pageable) {
+        return ResponseEntity.ok(this.studentService.
+                getAllStudents(this.infoService.getEmailFromJwt(authorization), token, pageable)
+                .stream().map(StudentDto::new).toList());
     }
 
     @PutMapping("/type")

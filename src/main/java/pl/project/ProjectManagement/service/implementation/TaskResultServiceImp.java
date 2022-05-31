@@ -1,6 +1,7 @@
 package pl.project.ProjectManagement.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.project.ProjectManagement.model.Task;
 import pl.project.ProjectManagement.model.TaskResult;
@@ -49,12 +50,12 @@ public class TaskResultServiceImp implements TaskResultService {
     }
 
     @Override
-    public List<TaskResult> getTaskResultsByTask(long taskId, String projectOwnerEmail) {
+    public List<TaskResult> getTaskResultsByTask(long taskId, String projectOwnerEmail, Pageable pageable) {
         Optional<Task> optionalTask = taskRepository.findById(taskId);
         if (optionalTask.isPresent()) {
             Task task = optionalTask.get();
             if (task.getProject().getProjectOwner().getEmail().equals(projectOwnerEmail)) {
-                return task.getTaskResults();
+                return taskResultRepository.findAllByTask(task, pageable);
             }
         }
         return new ArrayList<>();

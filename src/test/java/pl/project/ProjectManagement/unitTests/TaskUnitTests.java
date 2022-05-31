@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -33,8 +34,7 @@ import static org.mockito.Mockito.when;
 public class TaskUnitTests {
 
     private final Person person = new Person("test@test.pl", "password123");
-    private final Project project = new Project(1L, "Test", "Opis", LocalDateTime.now(),
-            AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now(), LocalDate.now(), this.person, new ArrayList<>(), new ArrayList<>());
+    private final Project project = new Project(1L, "Test", "Opis", LocalDateTime.now(), AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now(), LocalDate.now(), this.person, new ArrayList<>(), new ArrayList<>());
     private final Task task = new Task(1L, "Test", 1, "Opis", LocalDateTime.now(), this.project, new ArrayList<>());
     private final TaskDto dto = new TaskDto(this.task);
     @Mock
@@ -66,11 +66,11 @@ public class TaskUnitTests {
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
-/*
+
     @Test
     public void getProjectTasks_OK() {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(this.taskService.getProjectTasks(anyString(), any())).thenReturn(new ArrayList<>());
+        when(this.taskService.getProjectTasks(anyString(), any(),any(Pageable.class))).thenReturn(new ArrayList<>());
         long projectId = 1;
         Pageable pageable = PageRequest.of(0, 12);
 
@@ -78,17 +78,15 @@ public class TaskUnitTests {
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
-*/
+
 
     @Test
     public void getTasks_OK() {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(this.taskService.getTasks(anyString(), any())).thenReturn(new ArrayList<>());
+        when(this.taskService.getTasks(anyString(), any(), any(Pageable.class))).thenReturn(Page.empty());
         String token = "token";
         Pageable pageable = PageRequest.of(0, 12);
-        int size = 12;
-
-        ResponseEntity<?> response = taskController.getTasks("test@test.pl", token, pageable, size);
+        ResponseEntity<?> response = taskController.getTasks("test@test.pl", token, pageable);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }

@@ -1,6 +1,7 @@
 package pl.project.ProjectManagement.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.project.ProjectManagement.model.Person;
@@ -68,13 +69,13 @@ public class TaskServiceImp implements TaskService {
 
 
     @Override
-    public List<Task> getTasks(String adminEmail, String token) {
+    public Page<Task> getTasks(String adminEmail, String token, Pageable pageable) {
         Optional<Person> optionalPerson = personRepository.findByEmailAndToken(adminEmail, token);
         if (optionalPerson.isPresent()) {
             if (optionalPerson.get().getRole().equals(Role.ADMIN)) {
-                return taskRepository.findAll();
+                return taskRepository.findAll(pageable);
             }
         }
-        return new ArrayList<>();
+        return Page.empty();
     }
 }

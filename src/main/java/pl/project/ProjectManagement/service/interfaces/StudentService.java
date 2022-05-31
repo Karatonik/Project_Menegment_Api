@@ -1,5 +1,7 @@
 package pl.project.ProjectManagement.service.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.project.ProjectManagement.model.Student;
 import pl.project.ProjectManagement.model.enums.StudyType;
 
@@ -11,7 +13,7 @@ public interface StudentService {
 
     Student getStudent(String email);
 
-    List<Student> getAllStudents(String adminEmail, String token);
+    Page<Student> getAllStudents(String adminEmail, String token, Pageable pageable);
 
     boolean updateStudentType(String email, StudyType studyType);
 

@@ -12,7 +12,6 @@ import pl.project.ProjectManagement.service.interfaces.TaskService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/task")
@@ -40,7 +39,8 @@ public class TaskController {
     public ResponseEntity<?> getTask(@PathVariable long taskId) {
         return ResponseEntity.ok(new TaskDto(this.taskService.getTask(taskId)));
     }
-//todo
+
+    //todo
     @GetMapping("/project/{projectId}")
     public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization,
                                              @PathVariable long projectId,
@@ -53,10 +53,12 @@ public class TaskController {
 
     @GetMapping("/all/{token}")
     public ResponseEntity<?> getTasks(@RequestHeader("Authorization") String authorization,
-                                      @PathVariable String token, Pageable pageable, long size) {
+                                      @PathVariable String token, Pageable pageable) {
 
-        return ResponseEntity.ok(new PageImpl<>(this.taskService
-                .getTasks(this.infoService.getEmailFromJwt(authorization), token)
-                .stream().map(TaskDto::new).collect(Collectors.toList()), pageable, size));
+        List<TaskDto> taskDtoList = this.taskService
+                .getTasks(this.infoService.getEmailFromJwt(authorization), token, pageable)
+                .stream().map(TaskDto::new).toList();
+
+        return ResponseEntity.ok(new PageImpl<>(taskDtoList, pageable, taskDtoList.size()));
     }
 }
