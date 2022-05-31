@@ -66,7 +66,7 @@ public class TaskUnitTests {
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
-
+/*
     @Test
     public void getProjectTasks_OK() {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
@@ -78,7 +78,7 @@ public class TaskUnitTests {
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
-
+*/
 
     @Test
     public void getTasks_OK() {

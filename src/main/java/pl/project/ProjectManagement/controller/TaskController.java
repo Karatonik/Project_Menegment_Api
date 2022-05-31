@@ -45,13 +45,9 @@ public class TaskController {
     public ResponseEntity<?> getProjectTasks(@RequestHeader("Authorization") String authorization,
                                              @PathVariable long projectId,
                                              Pageable pageable) {
-        System.out.println(pageable);
-        List<TaskDto> tasks = this.taskService
-                .getProjectTasks(this.infoService.getEmailFromJwt(authorization), projectId)
-                .stream().map(TaskDto::new).toList();
-        long total = pageable.getOffset() + tasks.size() + (tasks.size() == pageable.getPageSize() ? pageable.getPageSize() : 0);
 
-        return ResponseEntity.ok(new PageImpl<TaskDto>(tasks, pageable, total));
+
+        return ResponseEntity.ok(this.taskService.getProjectTasks(this.infoService.getEmailFromJwt(authorization),projectId,pageable));
     }
 
     @GetMapping("/all/{token}")

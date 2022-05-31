@@ -88,7 +88,7 @@ public class TaskIntTests {
                 .andExpect(content().string(containsString("Test")));
     }
 
-
+/*
     @Test
     public void getProjectTasks_OK() throws Exception {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
@@ -120,7 +120,7 @@ public class TaskIntTests {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
-
+*/
     @Test
     public void getTasks_OK() throws Exception {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
