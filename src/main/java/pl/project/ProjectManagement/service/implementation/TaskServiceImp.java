@@ -48,7 +48,7 @@ public class TaskServiceImp implements TaskService {
     }
 
     @Override
-    public List<Task> getProjectTasks(String email, Long projectId, Pageable pageable) {
+    public Page<Task> getProjectTasks(String email, Long projectId, Pageable pageable) {
         Optional<Project> optionalProject = projectRepository.findById(projectId);
         if (optionalProject.isPresent()) {
             Project project = optionalProject.get();
@@ -64,7 +64,7 @@ public class TaskServiceImp implements TaskService {
                 }
             }
         }
-        return new ArrayList<>();
+        return Page.empty();
     }
 
 

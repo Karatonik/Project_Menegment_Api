@@ -94,7 +94,7 @@ public class TaskIntTests {
     @Test
     public void getProjectTasks_OK() throws Exception {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(this.taskService.getProjectTasks(anyString(), any(), any(Pageable.class))).thenReturn(new ArrayList<>());
+        when(this.taskService.getProjectTasks(anyString(), any(), any(Pageable.class))).thenReturn(Page.empty());
         long projectId = 1;
         int page = 0;
         int size = 12;
@@ -110,7 +110,7 @@ public class TaskIntTests {
 
     @Test
     public void getProjectTasks_withoutHeader_BadRequest() throws Exception {
-        when(this.taskService.getProjectTasks(anyString(), any(), any(Pageable.class))).thenReturn(new ArrayList<>());
+        when(this.taskService.getProjectTasks(anyString(), any(), any(Pageable.class))).thenReturn(Page.empty());
         long projectId = 1;
         int page = 0;
         int size = 12;

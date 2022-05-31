@@ -70,7 +70,7 @@ public class TaskUnitTests {
     @Test
     public void getProjectTasks_OK() {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(this.taskService.getProjectTasks(anyString(), any(),any(Pageable.class))).thenReturn(new ArrayList<>());
+        when(this.taskService.getProjectTasks(anyString(), any(),any(Pageable.class))).thenReturn(Page.empty());
         long projectId = 1;
         Pageable pageable = PageRequest.of(0, 12);
 

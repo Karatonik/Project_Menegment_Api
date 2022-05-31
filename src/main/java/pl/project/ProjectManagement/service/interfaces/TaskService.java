@@ -12,7 +12,7 @@ public interface TaskService {
 
     Task getTask(Long taskId);
 
-    List<Task> getProjectTasks(String email, Long projectId, Pageable pageable);
+    Page<Task> getProjectTasks(String email, Long projectId, Pageable pageable);
 
     Page<Task> getTasks(String adminEmail, String token, Pageable pageable);
 }
