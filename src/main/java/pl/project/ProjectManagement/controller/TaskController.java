@@ -51,7 +51,7 @@ public class TaskController {
                 .stream().map(TaskDto::new).toList();
 
         int start = Math.min((int) pageable.getOffset()*pageable.getPageSize(), tasks.size()-1 );
-        int end = start + pageable.getPageSize();
+        int end = Math.min(start + pageable.getPageSize(),tasks.size()-1);
 
         return ResponseEntity.ok(new PageImpl<>(tasks.subList(start,end), pageable, tasks.size()));
     }
