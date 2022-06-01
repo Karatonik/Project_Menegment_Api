@@ -31,18 +31,18 @@ public class ProjectManagementApplication {
 
     @EventListener(ApplicationReadyEvent.class)
     public void initAdmin() {
-       // Optional<Person> optionalAdmin = this.personRepository.findByRole(Role.ADMIN);
-      //  if (optionalAdmin.isEmpty()) {
+        Optional<Person> optionalAdmin = this.personRepository.findByRole(Role.ADMIN);
+        if (optionalAdmin.isEmpty()) {
             String password = new Random().ints(10, 33, 122)
                     .mapToObj(i -> String.valueOf((char)i)).collect(Collectors.joining());
 
             Person person = new Person(this.email,  this.encoder.encode(password));
             person.setRole(Role.ADMIN);
             this.personRepository.save(person);
-            System.out.printf("Create new Admin:log:%s, pass %s%n",person.getEmail(),password);
-        //} else {
-          //  System.out.println("Admin is present");
-        //}
+            System.out.printf("create new admin:log:%s, pass %s%n",person.getEmail(),password);
+        } else {
+            System.out.println("admin is present");
+        }
 
     }
 
