@@ -46,7 +46,7 @@ public class PersonController {
         return SmartResponseEntity.fromBoolean(this.personService.setPerson(payload));
     }
 
-    @GetMapping("/admin")
+    @PostMapping("/admin")
     public ResponseEntity<?> getAdminToken(@Valid @RequestBody AccessDataPayload payload) {
         return SmartResponseEntity.fromOptional(this.personService.getAdminToken(payload));
     }
