@@ -46,7 +46,7 @@ public class PersonController {
         return SmartResponseEntity.fromBoolean(this.personService.setPerson(payload));
     }
 
-    @PostMapping("/admin")
+    @GetMapping("/admin")
     public ResponseEntity<?> getAdminToken(@Valid @RequestBody AccessDataPayload payload) {
         return SmartResponseEntity.fromOptional(this.personService.getAdminToken(payload));
     }
@@ -77,12 +77,12 @@ public class PersonController {
                         , payload.getEmail(), payload.getRole()));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/all/{token}")
     public ResponseEntity<?> getAllPerson(@RequestHeader("Authorization") String authorization
-            , @RequestBody @Valid TokenPayload payload, Pageable pageable) {
+            ,@PathVariable String token, Pageable pageable) {
 
         Page<Person> personPage = this.personService.getAllPerson(this.infoService
-                .getEmailFromJwt(authorization), payload.getToken(), pageable);
+                .getEmailFromJwt(authorization), token, pageable);
 
         return ResponseEntity.ok(personPage);
     }

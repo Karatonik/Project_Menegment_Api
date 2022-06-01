@@ -24,7 +24,6 @@ import java.util.Objects;
 @ToString
 public class Person {
 
-
     @Id
     @Column(length = 50)
     private String email;

@@ -21,7 +21,6 @@ import pl.project.ProjectManagement.model.request.TokenWithPasswordPayload;
 import pl.project.ProjectManagement.model.request.UpdateRolePayload;
 import pl.project.ProjectManagement.model.response.JwtResponse;
 import pl.project.ProjectManagement.service.interfaces.InfoService;
-import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 
 import java.util.Optional;
@@ -130,7 +129,7 @@ public class PersonIntTests {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(this.accessData);
 
-        this.mvc.perform(post(String.format("%s/admin", this.path)).content(requestJson)
+        this.mvc.perform(get(String.format("%s/admin", this.path)).content(requestJson)
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -146,7 +145,7 @@ public class PersonIntTests {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(this.accessData);
 
-        this.mvc.perform(post(String.format("%s/admin", this.path)).content(requestJson)
+        this.mvc.perform(get(String.format("%s/admin", this.path)).content(requestJson)
                         .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
                 .andDo(print())
                 .andExpect(status().isNotFound())
