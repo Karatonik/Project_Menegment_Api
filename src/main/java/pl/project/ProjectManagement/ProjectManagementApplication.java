@@ -11,12 +11,12 @@ import pl.project.ProjectManagement.model.enums.Role;
 import pl.project.ProjectManagement.repository.PersonRepository;
 
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class ProjectManagementApplication {
 
-    @Value("${admin.password}")
-    String password;
     @Autowired
     private PersonRepository personRepository;
     @Value("${admin.email}")
@@ -28,12 +28,13 @@ public class ProjectManagementApplication {
 
     @EventListener(ApplicationReadyEvent.class)
     public void initAdmin() {
-        Optional<Person> optionalAdmin = this.personRepository.findById(this.email);
+        Optional<Person> optionalAdmin = this.personRepository.findByRole(Role.ADMIN);
         if (optionalAdmin.isEmpty()) {
-            Person person = new Person(this.email, this.password);
+            Person person = new Person(this.email,  new Random().ints(10, 33, 122)
+                    .mapToObj(i -> String.valueOf((char)i)).collect(Collectors.joining()));
             person.setRole(Role.ADMIN);
             this.personRepository.save(person);
-            System.out.println("Create new Admin");
+            System.out.printf("Create new Admin:log:%s, pass %s%n",person.getEmail(),person.getPassword());
         } else {
             System.out.println("Admin is present");
         }
