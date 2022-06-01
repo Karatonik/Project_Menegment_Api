@@ -134,12 +134,15 @@ public class PersonServiceImp implements PersonService {
 
     @Override
     public Optional<String> getAdminToken(AccessDataPayload emailAndPassword) {
-        Optional<Person> optionalPerson = this.personRepository
-                .findByEmailAndPasswordAndRole(emailAndPassword.getEmail(),
-                        this.encoder.encode(emailAndPassword.getPassword()),
-                        Role.ADMIN);
-        if (optionalPerson.isPresent()) {
-            Person person = optionalPerson.get();
+        Authentication authentication = this.authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(emailAndPassword.getEmail(),
+                        emailAndPassword.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        PersonBuilder personBuilder = (PersonBuilder) authentication.getPrincipal();
+
+        if (personBuilder.getRole().equals(Role.ADMIN)) {
+            Person person = this.personRepository.getById(personBuilder.getEmail());
             person.setToken();
             this.personRepository.save(person);
             return Optional.of(person.getToken());
