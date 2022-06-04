@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.project.ProjectManagement.model.Person;
+import pl.project.ProjectManagement.model.dto.PersonDto;
+import pl.project.ProjectManagement.model.dto.ProjectDto;
 import pl.project.ProjectManagement.model.enums.MailRole;
 import pl.project.ProjectManagement.model.request.*;
 import pl.project.ProjectManagement.model.request.Parent.TokenPayload;
@@ -17,6 +19,7 @@ import pl.project.ProjectManagement.service.interfaces.MailService;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 
 import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/person")
@@ -84,9 +87,9 @@ public class PersonController {
         Page<Person> personPage = this.personService.getAllPerson(this.infoService
                 .getEmailFromJwt(authorization), token, pageable);
 
-        return ResponseEntity.ok(personPage);
+        return ResponseEntity.ok(new PageImpl<>(personPage.stream().map(PersonDto::new).toList(),pageable
+                , personPage.getTotalElements()));
     }
-
     @PostMapping("/mail/{mailRole}")
     public ResponseEntity<?> sendToken(@RequestHeader("Authorization") String authorization
             , @PathVariable MailRole mailRole) {
