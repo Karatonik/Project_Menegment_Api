@@ -94,6 +94,7 @@ public class ProjectServiceImp implements ProjectService {
                     projectList = new ArrayList<>(new HashSet<>(projectList));
                 }
 
+                System.out.println(projectList);
                 return new PageImpl<>(projectList.subList(pageable.getPageNumber() * pageable.getPageSize(),
                         (pageable.getPageNumber() + 1) * pageable.getPageSize()), pageable, projectList.size());
             }
