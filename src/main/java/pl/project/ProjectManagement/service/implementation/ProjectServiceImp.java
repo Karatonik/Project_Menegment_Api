@@ -89,7 +89,7 @@ public class ProjectServiceImp implements ProjectService {
                 Optional<Student> optionalStudent = studentRepository.findById(email);
                 if (optionalStudent.isPresent()) {
                     Student student = optionalStudent.get();
-                    return projectRepository.findAllForUser(person,student, pageable);
+                    return projectRepository.findAllByProjectOwnerOrStudentsContains(person,student, pageable);
                 }
                 return Page.empty();
             }

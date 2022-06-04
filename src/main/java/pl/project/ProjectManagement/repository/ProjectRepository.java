@@ -20,8 +20,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<Project> findAllByProjectOwner(Person projectOwner);
 
-    @Query("SELECT p FROM project p WHERE  p.projectOwner = :projectOwner OR :student IN p.students")
-    Page<Project> findAllForUser(@Param("owner") Person projectOwner, @Param("student") Student student, Pageable pageable);
+    //@Query("SELECT p FROM project p WHERE  p.projectOwner = :projectOwner OR :student IN p.students")
+    //Page<Project> findAllForUser(@Param("owner") Person projectOwner, @Param("student") Student student, Pageable pageable);
 
     Page<Project> findAllByProjectOwnerOrStudentsContains(Person projectOwner, Student student, Pageable pageable);
 }
