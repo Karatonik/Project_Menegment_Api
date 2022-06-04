@@ -87,16 +87,11 @@ public class ProjectServiceImp implements ProjectService {
                 return projectRepository.findAll(pageable);
             } else {
                 Optional<Student> optionalStudent = studentRepository.findById(email);
-                List<Project> projectList = new ArrayList<>(person.getOwnedProjects());
                 if (optionalStudent.isPresent()) {
                     Student student = optionalStudent.get();
-                    projectList.addAll(student.getProjects());
-                    projectList = new ArrayList<>(new HashSet<>(projectList));
+                    return projectRepository.findAllForUser(person,student, pageable);
                 }
-
-                System.out.println(projectList);
-                return new PageImpl<>(projectList.subList(pageable.getPageNumber() * pageable.getPageSize(),
-                        (pageable.getPageNumber() + 1) * pageable.getPageSize()), pageable, projectList.size());
+                return Page.empty();
             }
         }
         return Page.empty();
