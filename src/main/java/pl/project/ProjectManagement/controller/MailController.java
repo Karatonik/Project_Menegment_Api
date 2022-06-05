@@ -23,7 +23,7 @@ public class MailController {
     }
 
     @PostMapping
-    public ResponseEntity<?> sendMail(@RequestBody @Valid MailPayload mailContent) {
+    public ResponseEntity<?> sendMail(@RequestBody MailPayload mailContent) {
         return SmartResponseEntity.fromBoolean(mailService.sendMail(mailContent));
     }
 }

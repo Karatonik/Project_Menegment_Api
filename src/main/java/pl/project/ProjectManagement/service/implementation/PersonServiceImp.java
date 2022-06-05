@@ -129,6 +129,8 @@ public class PersonServiceImp implements PersonService {
         if (optionalAdmin.isPresent()) {
             return personRepository.findAll(pageable);
         }
+
+        System.out.println("you are no admin");
         return Page.empty();
     }
 
