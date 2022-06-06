@@ -82,7 +82,7 @@ public class PersonController {
         return ResponseEntity.ok(new PageImpl<>(personPage.stream().map(PersonDto::new).toList(),pageable
                 , personPage.getTotalElements()));
     }
-    @PostMapping("/token")
+    @GetMapping("/token")
     public ResponseEntity<?> sendToken(@RequestHeader("Authorization") String authorization) {
         return ResponseEntity.ok(this.personService.getToken(this.infoService
                 .getEmailFromJwt(authorization)));
