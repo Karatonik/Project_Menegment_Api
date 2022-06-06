@@ -131,26 +131,6 @@ public class PersonUnitTests {
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
-
-
-    @Test
-    void updateEmail_shouldContainStatus_OK() {
-        when(this.personService.updateEmail(anyString(), anyString())).thenReturn(true);
-
-        ResponseEntity<?> response = this.personController.updateEmail(this.tokenWithEmailPayload);
-
-        assertThat(response.getStatusCodeValue(), is(HttpStatus.OK.value()));
-    }
-
-    @Test
-    void updateEmail_shouldContainStatus_BAD_REQUEST() {
-        when(this.personService.updateEmail(anyString(), anyString())).thenReturn(false);
-
-        ResponseEntity<?> response = this.personController.updateEmail(this.tokenWithEmailPayload);
-
-        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-    }
-
     @Test
     void updateRole_shouldContainStatus_OK() {
         UpdateRolePayload updateRolePayload = new UpdateRolePayload("test@test.pl","adminToken",Role.ADMIN);

@@ -57,13 +57,6 @@ public class PersonController {
         return SmartResponseEntity.fromBoolean(this.personService
                 .deletePerson(payload.getToken(), payload.getPassword()));
     }
-
-    @PutMapping("/email")
-    public ResponseEntity<?> updateEmail(@Valid @RequestBody TokenWithEmailPayload payload) {
-        return SmartResponseEntity.fromBoolean(this.personService
-                .updateEmail(payload.getToken(), payload.getEmail()));
-    }
-
     @PutMapping("/role")
     public ResponseEntity<?> updateRole(@RequestHeader("Authorization") String authorization
             , @RequestBody @Valid UpdateRolePayload payload) {

@@ -21,9 +21,6 @@ public interface PersonService {
     boolean updatePersonPassword(String token, String newPassword);
 
     boolean deletePerson(String token, String password);
-
-    boolean updateEmail(String token, String newEmail);
-
     boolean updateRole(String adminEmail, String adminToken, String email, Role role);
 
     Page<Person> getAllPerson(String adminEmail, String adminToken, Pageable pageable);

@@ -215,36 +215,6 @@ public class PersonIntTests {
                 .andExpect(content().string(containsString("BAD_REQUEST")));
     }
     @Test
-    public void updateEmail_shouldContainStatus_OK() throws Exception {
-        when(this.personService.updateEmail(anyString(), anyString())).thenReturn(true);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
-        ObjectWriter ow = mapper.writer().withoutRootName();
-        String requestJson = ow.writeValueAsString(this.tokenWithEmailPayload);
-
-        mvc.perform(put(String.format("%s/email", this.path)).content(requestJson)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("OK")));
-    }
-    @Test
-    public void updateEmail_shouldContainStatus_BAD_REQUEST() throws Exception {
-        when(this.personService.updateEmail(anyString(), anyString())).thenReturn(false);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withoutRootName();
-        String requestJson = ow.writeValueAsString(this.tokenWithEmailPayload);
-
-        this.mvc.perform(put(String.format("%s/email", this.path)).content(requestJson)
-                        .contentType(MediaType.APPLICATION_JSON).accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("BAD_REQUEST")));
-    }
-    @Test
     public void updateRole_shouldContainStatus_OK() throws Exception {
         UpdateRolePayload updateRolePayload = new UpdateRolePayload("test@test.pl","adminToken",Role.ADMIN);
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");

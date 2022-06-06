@@ -106,18 +106,6 @@ public class PersonServiceImp implements PersonService {
         return false;
     }
 
-    @Override
-    public boolean updateEmail(String token, String newEmail) {
-        Optional<Person> optionalPerson = this.personRepository.findByToken(token);
-        if (optionalPerson.isPresent()) {
-            Person person = optionalPerson.get();
-            person.setEmail(newEmail);
-            person.setToken();
-            this.personRepository.save(optionalPerson.get());
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public boolean updateRole(String adminEmail, String adminToken, String email, Role role) {
