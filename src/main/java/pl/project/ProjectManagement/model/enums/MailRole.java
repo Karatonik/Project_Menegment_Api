@@ -4,10 +4,10 @@ import lombok.ToString;
 
 @ToString
 public enum MailRole {
-    updateEmail("email"),
-    updateRole("role"),
-    deletePerson("delete"),
-    updatePassword("password");
+    email("email"),
+    role("role"),
+    delete("delete"),
+    password("password");
 
     private final String url;
 
