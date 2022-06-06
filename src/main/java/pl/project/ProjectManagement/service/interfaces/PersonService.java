@@ -16,6 +16,8 @@ public interface PersonService {
 
     Optional<JwtResponse> authenticate(AccessDataPayload emailAndPassword);
 
+    String getToken(String email);
+
     boolean updatePersonPassword(String token, String newPassword);
 
     boolean deletePerson(String token, String password);

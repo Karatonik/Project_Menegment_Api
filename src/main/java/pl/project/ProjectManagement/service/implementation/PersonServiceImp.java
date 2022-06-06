@@ -18,6 +18,7 @@ import pl.project.ProjectManagement.model.response.JwtResponse;
 import pl.project.ProjectManagement.repository.PersonRepository;
 import pl.project.ProjectManagement.service.interfaces.PersonService;
 
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,6 +71,16 @@ public class PersonServiceImp implements PersonService {
             System.out.println(e.getMessage());
         }
         return Optional.empty();
+    }
+
+    @Override
+    public String getToken(String email) {
+        Optional<Person> optionalPerson = personRepository.findById(email);
+        if(optionalPerson.isPresent()){
+            Person person = optionalPerson.get();
+            return person.getToken();
+        }
+        return "";
     }
 
     @Override
