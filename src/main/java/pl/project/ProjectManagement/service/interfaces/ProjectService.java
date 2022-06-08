@@ -18,6 +18,8 @@ public interface ProjectService {
 
     Page<Project> getProjects(String email, Pageable pageable);
 
+    Page<Project> getProjectsToJoin(String email, Pageable pageable);
+
     boolean deleteProject(String email, Long projectId);
 
     boolean updateProjectAccess(String email, Long projectId, AccessType access);

@@ -91,6 +91,14 @@ public class ProjectController {
                 .updateProjectAccess(this.infoService.getEmailFromJwt(authorization)
                         , payload.getProjectId(), payload.getAccess()));
     }
+    @GetMapping("/available")
+    public ResponseEntity<?> getProjectsToJoin(@RequestHeader("Authorization") String authorization, Pageable pageable) {
+        Page<Project> projectPage = this.projectService.getProjectsToJoin(this.infoService
+                .getEmailFromJwt(authorization), pageable);
+
+        return ResponseEntity.ok(new PageImpl<>(projectPage.stream().map(ProjectDto::new)
+                .collect(Collectors.toList()), pageable, projectPage.getTotalElements()));
+    }
 
     @PutMapping("/status")
     public ResponseEntity<?> updateProjectStatus(@RequestHeader("Authorization") String authorization

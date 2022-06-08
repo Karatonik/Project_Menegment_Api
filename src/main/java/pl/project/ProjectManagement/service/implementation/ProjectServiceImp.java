@@ -101,6 +101,24 @@ public class ProjectServiceImp implements ProjectService {
     }
 
     @Override
+    public Page<Project> getProjectsToJoin(String email, Pageable pageable) {
+       Optional<Person> optionalPerson = personRepository.findById(email);
+       if(optionalPerson.isPresent()){
+           Person person = optionalPerson.get();
+           Optional<Student> optionalStudent = studentRepository.findById(email);
+           if(optionalStudent.isPresent()){
+               Student student = optionalStudent.get();
+               return projectRepository.findAllByAccessAndProjectOwnerNotLikeOrStudentsNotContains(AccessType.OPEN
+                       ,person,student, pageable);
+           }else {
+               return projectRepository.findAllByAccessAndProjectOwnerNotLike(AccessType.OPEN
+                       ,person, pageable);
+           }
+       }
+       return Page.empty();
+    }
+
+    @Override
     public boolean deleteProject(String email, Long projectId) {
         Optional<Person> optionalPerson = personRepository.findById(email);
         if (optionalPerson.isPresent()) {

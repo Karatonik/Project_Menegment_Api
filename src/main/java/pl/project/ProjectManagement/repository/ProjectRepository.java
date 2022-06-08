@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.Project;
 import pl.project.ProjectManagement.model.Student;
+import pl.project.ProjectManagement.model.enums.AccessType;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +21,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Page<Project> findAllByProjectOwner(Person projectOwner,  Pageable pageable);
     Page<Project> findAllByProjectOwnerOrStudentsContains(Person projectOwner, Student student, Pageable pageable);
+
+    Page<Project> findAllByAccessAndProjectOwnerNotLikeOrStudentsNotContains(AccessType accessType, Person person
+            , Student student, Pageable pageable);
+
+    Page<Project> findAllByAccessAndProjectOwnerNotLike(AccessType accessType, Person person
+           , Pageable pageable);
 }
