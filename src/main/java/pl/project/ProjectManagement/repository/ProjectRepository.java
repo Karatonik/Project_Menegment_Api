@@ -18,6 +18,6 @@ import java.util.Queue;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     Optional<Project> findByProjectIdAndProjectOwner(Long projectId, Person projectOwner);
 
-    List<Project> findAllByProjectOwner(Person projectOwner);
+    Page<Project> findAllByProjectOwner(Person projectOwner,  Pageable pageable);
     Page<Project> findAllByProjectOwnerOrStudentsContains(Person projectOwner, Student student, Pageable pageable);
 }
