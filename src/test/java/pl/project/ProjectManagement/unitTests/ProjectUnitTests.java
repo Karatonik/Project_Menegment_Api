@@ -14,13 +14,7 @@ import pl.project.ProjectManagement.controller.ProjectController;
 import pl.project.ProjectManagement.model.Person;
 import pl.project.ProjectManagement.model.Project;
 import pl.project.ProjectManagement.model.dto.ProjectDto;
-import pl.project.ProjectManagement.model.enums.AccessType;
-import pl.project.ProjectManagement.model.enums.StatusType;
-import pl.project.ProjectManagement.model.request.DescriptionPayload;
 import pl.project.ProjectManagement.model.request.Parent.ProjectPayload;
-import pl.project.ProjectManagement.model.request.ProjectAccessPayload;
-import pl.project.ProjectManagement.model.request.ProjectNamePayload;
-import pl.project.ProjectManagement.model.request.ProjectStatusPayload;
 import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.ProjectService;
@@ -62,53 +56,6 @@ public class ProjectUnitTests {
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
-    @Test
-    public void updateProjectDescription_OK() {
-        DescriptionPayload descriptionPayload = new DescriptionPayload(1L, "Test");
-        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(projectService.updateProjectDescription(anyString(), anyLong(), anyString())).thenReturn(true);
-
-        ResponseEntity<?> response = projectController.updateProjectDescription("test@test.pl"
-                , descriptionPayload);
-
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    }
-
-    @Test
-    public void updateProjectDescription_BadRequest() {
-        DescriptionPayload descriptionPayload = new DescriptionPayload(1L, "Test");
-        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        when(projectService.updateProjectDescription(anyString(), anyLong(), anyString())).thenReturn(false);
-
-        ResponseEntity<?> response = projectController.updateProjectDescription("test@test.pl"
-                , descriptionPayload);
-
-        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-    }
-
-
-    @Test
-    public void updateProjectName_OK() {
-        ProjectNamePayload projectNamePayload = new ProjectNamePayload(1L, "Name");
-        when(projectService.updateProjectName(anyString(), anyLong(), anyString())).thenReturn(true);
-        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-
-        ResponseEntity<?> response = projectController.updateProjectName("test@test.pl"
-                , projectNamePayload);
-
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    }
-
-    @Test
-    public void updateProjectName_BadRequest() {
-        ProjectNamePayload projectNamePayload = new ProjectNamePayload(1L, "Name");
-        when(projectService.updateProjectName(anyString(), anyLong(), anyString())).thenReturn(false);
-        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-
-        ResponseEntity<?> response = projectController.updateProjectName("test@test.pl", projectNamePayload);
-
-        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-    }
 
     @Test
     public void getProject_OK() {
@@ -149,53 +96,6 @@ public class ProjectUnitTests {
         when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
 
         ResponseEntity<?> response = projectController.deleteProject("test@test.pl", projectPayload);
-
-        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-    }
-
-
-    @Test
-    public void updateProjectAccess_OK() {
-        ProjectAccessPayload projectAccessPayload = new ProjectAccessPayload(1L, AccessType.OPEN);
-        when(projectService.updateProjectAccess(anyString(), anyLong(), any())).thenReturn(true);
-        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        ResponseEntity<?> response = projectController.updateProjectAccess("testowy@edu.pl"
-                , projectAccessPayload);
-
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    }
-
-    @Test
-    public void updateProjectAccess_BadRequest() {
-        ProjectAccessPayload projectAccessPayload = new ProjectAccessPayload(1L, AccessType.OPEN);
-        when(projectService.updateProjectAccess(anyString(), anyLong(), any())).thenReturn(false);
-        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-        ResponseEntity<?> response = projectController.updateProjectAccess("testowy@@.pl"
-                , projectAccessPayload);
-
-        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-    }
-
-    @Test
-    public void updateProjectStatus_OK() {
-        ProjectStatusPayload projectStatusPayload = new ProjectStatusPayload(1L, StatusType.CLOSE);
-        when(projectService.updateProjectStatus(anyString(), anyLong(), any())).thenReturn(true);
-        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-
-        ResponseEntity<?> response = projectController.updateProjectStatus("nowy@eu.ep"
-                , projectStatusPayload);
-
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    }
-
-    @Test
-    public void updateProjectStatus_BadRequest() {
-        ProjectStatusPayload projectStatusPayload = new ProjectStatusPayload(1L, StatusType.CLOSE);
-        when(projectService.updateProjectStatus(anyString(), anyLong(), any())).thenReturn(false);
-        when(this.infoService.getEmailFromJwt(anyString())).thenReturn("test@test.pl");
-
-        ResponseEntity<?> response = projectController.updateProjectStatus("nowy@eu.epsss"
-                , projectStatusPayload);
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
