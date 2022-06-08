@@ -41,7 +41,7 @@ public class ProjectController {
         return ResponseEntity.ok(new ProjectDto(this.projectService
                 .setProject(this.modelWrapper.getProjectFromDto(projectDto))));
     }
-    @GetMapping("/project/{projectId}")
+    @GetMapping("/{projectId}")
     public ResponseEntity<?> getProject(@PathVariable long projectId) {
         return ResponseEntity.ok(new ProjectDto(this.projectService.getProject(projectId)));
     }
