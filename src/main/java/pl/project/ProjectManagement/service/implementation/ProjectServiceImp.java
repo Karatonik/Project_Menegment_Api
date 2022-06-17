@@ -115,12 +115,12 @@ public class ProjectServiceImp implements ProjectService {
            if(optionalStudent.isPresent()){
                Student student = optionalStudent.get();
                System.out.println("findAllByAccessAndProjectOwnerNotLikeOrStudentsNotContains");
-               return projectRepository.findAllByAccessAndProjectOwnerNotLikeOrStudentsNotContains(AccessType.OPEN
-                       ,person,student, pageable);
+               return projectRepository.findAllByProjectOwnerNotLikeOrStudentsNotContainingAndAccess(
+                       person,student,AccessType.OPEN, pageable);
            }else {
                System.out.println("findAllByAccessAndProjectOwnerNotLike");
-               return projectRepository.findAllByAccessAndProjectOwnerNotLike(AccessType.OPEN
-                       ,person, pageable);
+               return projectRepository.findAllByProjectOwnerNotLikeAndAccess(
+                       person, AccessType.OPEN, pageable);
            }
        }
        return Page.empty();
