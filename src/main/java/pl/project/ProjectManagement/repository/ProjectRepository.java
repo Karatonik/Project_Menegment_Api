@@ -22,7 +22,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     Page<Project> findAllByProjectOwner(Person projectOwner,  Pageable pageable);
     Page<Project> findAllByProjectOwnerOrStudentsContains(Person projectOwner, Student student, Pageable pageable);
 
-    Page<Project> findAllByAccess(AccessType accessType, Pageable pageable);
+    Page<Project> findAllByAccessAndProjectOwnerNotLike(AccessType accessType,Person projectOwner , Pageable pageable);
 
     Page<Project> findAllByProjectOwnerNotLikeOrStudentsNotContainingAndAccess(Person projectOwner, Student students, AccessType access, Pageable pageable);
 
