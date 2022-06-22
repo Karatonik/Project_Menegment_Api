@@ -87,6 +87,7 @@ public class ProjectController {
     @PutMapping
     public ResponseEntity<?> updateProject(@RequestHeader("Authorization") String authorization
             , @RequestBody ProjectDto projectDto){
+        System.out.println(projectDto);
         return SmartResponseEntity.fromBoolean(this.projectService.updateProject(this.infoService
                         .getEmailFromJwt(authorization) ,modelWrapper.getProjectFromDto(projectDto)));
     }
