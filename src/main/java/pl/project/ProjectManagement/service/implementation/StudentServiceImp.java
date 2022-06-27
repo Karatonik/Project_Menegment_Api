@@ -76,9 +76,12 @@ public class StudentServiceImp implements StudentService {
             if (project.getAccess().equals(AccessType.OPEN)) {
                 Optional<Student> optionalStudent = studentRepository.findById(email);
                 if (optionalStudent.isPresent()) {
+                    System.out.println(optionalStudent.get());
                     List<Student> studentList = project.getStudents();
+                    studentList = studentList.isEmpty() ? new ArrayList<>(): studentList;
                     studentList.add(optionalStudent.get());
                     project.setStudents(studentList);
+                    System.out.println(project.getStudents());
                     projectRepository.save(project);
                     return true;
                 }
