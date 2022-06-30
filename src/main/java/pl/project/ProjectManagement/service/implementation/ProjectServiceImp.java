@@ -14,8 +14,10 @@ import pl.project.ProjectManagement.model.enums.StatusType;
 import pl.project.ProjectManagement.repository.PersonRepository;
 import pl.project.ProjectManagement.repository.ProjectRepository;
 import pl.project.ProjectManagement.repository.StudentRepository;
+import pl.project.ProjectManagement.repository.TaskRepository;
 import pl.project.ProjectManagement.service.interfaces.ProjectService;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,12 +27,15 @@ public class ProjectServiceImp implements ProjectService {
     private final ProjectRepository projectRepository;
     private final StudentRepository studentRepository;
     private final PersonRepository personRepository;
+    private final TaskRepository taskRepository;
 
     @Autowired
-    public ProjectServiceImp(ProjectRepository projectRepository, StudentRepository studentRepository, PersonRepository personRepository) {
+    public ProjectServiceImp(ProjectRepository projectRepository, StudentRepository studentRepository
+            , PersonRepository personRepository ,TaskRepository taskRepository) {
         this.projectRepository = projectRepository;
         this.studentRepository = studentRepository;
         this.personRepository = personRepository;
+        this.taskRepository = taskRepository;
     }
 
     @Override
@@ -124,13 +129,17 @@ public class ProjectServiceImp implements ProjectService {
        return Page.empty();
     }
 
+    @Transactional
     @Override
     public boolean deleteProject(String email, Long projectId) {
         Optional<Person> optionalPerson = personRepository.findById(email);
         if (optionalPerson.isPresent()) {
             Optional<Project> optionalProject = projectRepository.findByProjectIdAndProjectOwner(projectId, optionalPerson.get());
             if (optionalProject.isPresent()) {
-                projectRepository.delete(optionalProject.get());
+                Project project = optionalProject.get();
+                taskRepository.deleteAll(project.getTasks());
+                
+                projectRepository.delete(project);
                 return true;
             }
 
