@@ -1,6 +1,8 @@
 package pl.project.ProjectManagement.model;
 
 import lombok.*;
+import pl.project.ProjectManagement.model.enums.AccessType;
+import pl.project.ProjectManagement.model.enums.TaskStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,6 +34,9 @@ public class Task {
     @Column(nullable = false)
     private LocalDateTime dateTimeAdded;
 
+    @Column(columnDefinition = "integer default 0")
+    private TaskStatus taskStatus;
+
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
@@ -46,6 +51,7 @@ public class Task {
         this.description = description;
         this.dateTimeAdded = dateTimeAdded;
         this.project = project;
+        this.taskStatus = TaskStatus.Backlog;
     }
 
     @Override

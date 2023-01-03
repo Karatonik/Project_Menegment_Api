@@ -2,6 +2,7 @@ package pl.project.ProjectManagement.model.dto;
 
 import lombok.*;
 import pl.project.ProjectManagement.model.Task;
+import pl.project.ProjectManagement.model.enums.TaskStatus;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +23,7 @@ public class TaskDto {
 
     private LocalDateTime dateTimeAdded;
 
-
+    private TaskStatus taskStatus;
     private Long projectIds;
 
     public TaskDto(Task task) {
@@ -32,5 +33,6 @@ public class TaskDto {
         this.description = task.getDescription();
         this.dateTimeAdded = task.getDateTimeAdded();
         this.projectIds = task.getProject().getProjectId();
+        this.taskStatus = task.getTaskStatus();
     }
 }

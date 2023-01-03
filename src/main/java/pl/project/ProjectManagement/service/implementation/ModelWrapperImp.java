@@ -84,6 +84,7 @@ public class ModelWrapperImp implements ModelWrapper {
             Optional<Project> optionalProject = projectRepository.findById(dto.getProjectIds());
             task.setProject(optionalProject.orElse(new Project()));
         }
+        task.setTaskStatus(dto.getTaskStatus());
         task.setDescription(dto.getDescription());
         task.setName(dto.getName());
         task.setOrderNumber(dto.getOrderNumber());
