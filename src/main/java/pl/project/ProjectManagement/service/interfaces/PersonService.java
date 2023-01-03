@@ -26,4 +26,6 @@ public interface PersonService {
     Page<Person> getAllPerson(String adminEmail, String adminToken, Pageable pageable);
 
     Optional<String> getAdminToken(AccessDataPayload emailAndPassword);
+
+    boolean sendAuthToken(String email);
 }
