@@ -1,11 +1,13 @@
 package pl.project.ProjectManagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.project.ProjectManagement.model.TaskResult;
 import pl.project.ProjectManagement.model.dto.TaskResultDto;
 import pl.project.ProjectManagement.service.interfaces.InfoService;
@@ -33,9 +35,9 @@ public class TaskResultController {
     }
 
     @PostMapping
-    public ResponseEntity<?> setTaskResult(@RequestBody @Valid TaskResultDto taskResultDto) {
+    public ResponseEntity<?> setTaskResult(@RequestBody @Valid TaskResultDto taskResultDto, MultipartFile file) {
         return ResponseEntity.ok(new TaskResultDto(this.taskResultService.setTaskResult(this.modelWrapper.
-                getTaskResultFromTaskResultDto(taskResultDto))));
+                getTaskResultFromTaskResultDto(taskResultDto),file)));
     }
 
     @GetMapping("/{taskId}")
@@ -43,6 +45,12 @@ public class TaskResultController {
             , @PathVariable long taskId) {
         return ResponseEntity.ok(new TaskResultDto(this.
                 taskResultService.getTaskResult(taskId, this.infoService.getEmailFromJwt(authorization))));
+    }
+    @RequestMapping(value = "/file/{taskId}", method = RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource getFile(@RequestHeader("Authorization") String authorization
+            , @PathVariable long taskId) {
+        return new FileSystemResource(taskResultService.getTaskResultFile(taskId, this.infoService.getEmailFromJwt(authorization)));
     }
 
     @GetMapping("/task/{taskId}")
