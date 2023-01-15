@@ -22,6 +22,7 @@ import pl.project.ProjectManagement.model.Task;
 import pl.project.ProjectManagement.model.dto.TaskDto;
 import pl.project.ProjectManagement.model.enums.AccessType;
 import pl.project.ProjectManagement.model.enums.StatusType;
+import pl.project.ProjectManagement.model.enums.TaskStatus;
 import pl.project.ProjectManagement.service.interfaces.InfoService;
 import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.TaskService;
@@ -49,7 +50,7 @@ public class TaskIntTests {
     private final Person person = new Person("test@test.pl", "password123");
     private final Project project = new Project(1L, "Test", "Opis", LocalDateTime.now(),
             AccessType.OPEN, StatusType.CONTINUES, LocalDateTime.now(), LocalDate.now(), this.person, new ArrayList<>(), new ArrayList<>());
-    private final Task task = new Task(1L, "Test", 1, "Opis", LocalDateTime.now(), this.project, new ArrayList<>());
+    private final Task task = new Task(1L, "Test", 1, "Opis", LocalDateTime.now(), TaskStatus.Backlog, this.project, new ArrayList<>());
     private final TaskDto dto = new TaskDto(this.task);
     @MockBean
     TaskService taskService;
