@@ -35,7 +35,7 @@ public class TaskResultController {
     }
 
     @PostMapping
-    public ResponseEntity<?> setTaskResult(@RequestBody @Valid TaskResultDto taskResultDto, MultipartFile file) {
+    public ResponseEntity<?> setTaskResult(@RequestBody @Valid TaskResultDto taskResultDto, @RequestPart("file") MultipartFile file) {
         return ResponseEntity.ok(new TaskResultDto(this.taskResultService.setTaskResult(this.modelWrapper.
                 getTaskResultFromTaskResultDto(taskResultDto),file)));
     }
