@@ -1,5 +1,5 @@
 FROM openjdk:17
-ADD target/project-menegment-api.jar project-menegment-api.jar
-COPY ${JAR_FILE} API.jar
-ENTRYPOINT ["java","-jar","project-menegment-api.jar"]
+ENV _JAVA_OPTIONS="-Xmx200m"
+COPY target/ProjectManagement-0.0.1-SNAPSHOT.jar ProjectManagement-0.0.1-SNAPSHOT.jar 
+CMD java  -jar ProjectManagement-0.0.1-SNAPSHOT.jar
 EXPOSE 8080
