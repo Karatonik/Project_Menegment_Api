@@ -23,6 +23,7 @@ public class TaskResultDto {
     private LocalDateTime dateOfUpload;
 
     public TaskResultDto(TaskResult taskResult) {
+        System.out.println(taskResult);
         this.resultId = taskResult.getResultId();
         this.studentEmail = taskResult.getStudent().getEmail();
         this.taskId = taskResult.getTask().getTaskId();

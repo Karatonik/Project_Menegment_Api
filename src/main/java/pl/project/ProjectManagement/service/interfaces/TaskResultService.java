@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.project.ProjectManagement.model.TaskResult;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public interface TaskResultService {
@@ -15,7 +16,7 @@ public interface TaskResultService {
 
     TaskResult getTaskResult(long resultId, String projectOwnerEmail);
 
-    File getTaskResultFile(long resultId, String projectOwnerEmail);
+    File getTaskResultFile(long resultId, String projectOwnerEmail) throws IOException;
 
     Page<TaskResult> getTaskResultsByTask(long taskId, String projectOwnerEmail, Pageable pageable);
 

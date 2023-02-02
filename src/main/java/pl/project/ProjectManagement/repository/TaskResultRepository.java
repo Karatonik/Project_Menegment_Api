@@ -13,4 +13,5 @@ public interface TaskResultRepository extends JpaRepository<TaskResult, Long> {
     Optional<TaskResult> findByFileName(String fileName);
 
     Page<TaskResult> findAllByTask(Task task, Pageable pageable);
+    List<TaskResult> findAllByTask(Task task);
 }

@@ -15,6 +15,7 @@ import pl.project.ProjectManagement.service.interfaces.ModelWrapper;
 import pl.project.ProjectManagement.service.interfaces.TaskResultService;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/res")
@@ -35,21 +36,25 @@ public class TaskResultController {
     }
 
     @PostMapping
-    public ResponseEntity<?> setTaskResult(@RequestBody @Valid TaskResultDto taskResultDto, MultipartFile file) {
+    public ResponseEntity<?> setTaskResult(@RequestPart("data") @Valid TaskResultDto taskResultDto, @RequestPart("file") MultipartFile file) {
+        System.out.println(taskResultDto);
+        System.out.println(file);
         return ResponseEntity.ok(new TaskResultDto(this.taskResultService.setTaskResult(this.modelWrapper.
                 getTaskResultFromTaskResultDto(taskResultDto),file)));
     }
 
-    @GetMapping("/{taskId}")
+    @GetMapping("/{taskResultId}")
     public ResponseEntity<?> getTaskResult(@RequestHeader("Authorization") String authorization
-            , @PathVariable long taskId) {
+            , @PathVariable long taskResultId) {
+        System.out.println("taskid: " + taskResultId);
         return ResponseEntity.ok(new TaskResultDto(this.
-                taskResultService.getTaskResult(taskId, this.infoService.getEmailFromJwt(authorization))));
+                taskResultService.getTaskResult(taskResultId, this.infoService.getEmailFromJwt(authorization))));
     }
     @RequestMapping(value = "/file/{taskId}", method = RequestMethod.GET)
     @ResponseBody
     public FileSystemResource getFile(@RequestHeader("Authorization") String authorization
-            , @PathVariable long taskId) {
+            , @PathVariable long taskId) throws IOException {
+        System.out.println("Task id: " + taskId);
         return new FileSystemResource(taskResultService.getTaskResultFile(taskId, this.infoService.getEmailFromJwt(authorization)));
     }
 
@@ -59,6 +64,7 @@ public class TaskResultController {
         Page<TaskResult> resultPage = taskResultService.
                 getTaskResultsByTask(taskId, this.infoService.getEmailFromJwt(authorization), pageable);
 
+        System.out.println(resultPage);
         return ResponseEntity.ok(new PageImpl<>(resultPage.stream()
                 .map(TaskResultDto::new).toList(), pageable, resultPage.getTotalElements()));
 
